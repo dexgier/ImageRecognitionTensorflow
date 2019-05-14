@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,15 +45,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_shopping_cart);
-		Toolbar toolbar = findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		setContentView(R.layout.content_shopping_cart);
 		
 		mRecyclerView = findViewById(R.id.recy);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
 		mRecyclerView.setAdapter(mProductAdapter);
 		mTotalPriceView = findViewById(R.id.totalPriceView);
-		mAlert = new AlertDialog.Builder(this);
+		mAlert = new AlertDialog.Builder(   this);
 		initButton();
 		initObserver();
 		initViewModel();
@@ -180,14 +177,15 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
 		
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_delete_item) {
-			mMainViewModel.deleteAll(mProducts);
-			return true;
+		switch (item.getItemId()) {
+			case R.id.action_delete_item:
+				mMainViewModel.deleteAll(mProducts);
+				return true;
+			case R.id.home:
+				finish();
 		}
-		
 		return super.onOptionsItemSelected(item);
 	}
 }
+
