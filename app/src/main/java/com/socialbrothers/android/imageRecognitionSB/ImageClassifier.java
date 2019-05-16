@@ -24,6 +24,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.ml.common.FirebaseMLException;
@@ -50,6 +51,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+
+import static com.socialbrothers.android.imageRecognitionSB.Alternatives.EDIT_PRODUCT;
 
 /**
  * Classifies images with Tensorflow Lite.
@@ -101,6 +104,7 @@ public class ImageClassifier {
     private View v;
     private Button mBetaalButton;
     private boolean isVisible;
+    private TextView productName;
     private boolean isPressed = false;
     private FirebaseModelInterpreter mInterpreter;
     private FirebaseModelInputOutputOptions mDataOptions;
@@ -146,6 +150,7 @@ public class ImageClassifier {
         this.context = context;
         this.v = v;
         labelList = loadLabelList(activity);
+
         imgData =
                 ByteBuffer.allocateDirect(
                         4 * DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
@@ -186,6 +191,7 @@ public class ImageClassifier {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
+        /*
         if(isVisible && !isthisvisible){
             try{
                 mBetaalButton.setVisibility(View.VISIBLE);
@@ -200,9 +206,23 @@ public class ImageClassifier {
         mBetaalButton = v.findViewById(R.id.betaalButton);
         mBetaalButton.setOnClickListener(v -> {
             isPressed = true;
-            Intent intent = new Intent(context, ShoppingCartActivity.class);
+            Intent intent = new Intent(context, Alternatives.class);
             context.startActivity(intent);
         });
+        */
+        productName = v.findViewById(R.id.text);
+        String productText = printTopKLabels();
+        if(isVisible){
+
+            try{
+                productName.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(context, Alternatives.class);
+                intent.putExtra(EDIT_PRODUCT, productText);
+                context.startActivity(intent);
+            }catch(Exception e){
+
+            }
+        }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -217,6 +237,9 @@ public class ImageClassifier {
         String textToShow = printTopKLabels();
         //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
         //mProductName.setText(textToShow);
+
+
+
         return textToShow;
     }
 
@@ -331,30 +354,7 @@ public class ImageClassifier {
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
                 isVisible=true;
-                switch(label.getKey()){
-                    case "ananas" : return textToShow + "\n€1,75";
-                    case "avocado" : return textToShow + "\n€1,19";
-                    case "banaan" : return textToShow + "\n€0,50";
-                    case "citroen" : return textToShow + "\n€1,15";
-                    case "courgette" : return textToShow + "\n€0,89";
-                    case "croissant" : return textToShow + "\n€1,30";
-                    case "elstar" : return textToShow + "\n€0,34";
-                    case "grannysmith" : return textToShow + "\n€0,57";
-                    case "jonagold" : return textToShow + "\n€0,37";
-                    case "kiwi" : return textToShow + "\n€1,02";
-                    case "komkommer" : return textToShow + "\n€1,02";
-                    case "mandarijn" : return textToShow + "\n€0,60";
-                    case "peer" : return textToShow + "\n€1,65";
-                    case "pistoletbruin" : return textToShow + "\n€1,45";
-                    case "pistoletwit" : return textToShow + "\n€1,45";
-                    case "prei" : return textToShow + "\n€1,25";
-                    case "rodeui" : return textToShow + "\n€0,54";
-                    case "royalgala" : return textToShow + "\n€0,38";
-                    case "tomaat" : return textToShow + "\n€0,40";
-                    case "witteui" : return textToShow + "\n€0,54";
-                    case "zoeteaardappel" : return textToShow + "\n€1,20";
-                    default: return textToShow;
-                }
+                return textToShow;
             }
             return textToShow;
         } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
