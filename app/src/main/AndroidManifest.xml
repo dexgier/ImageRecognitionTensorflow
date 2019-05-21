@@ -23,7 +23,12 @@
             android:name="com.socialbrothers.android.imageRecognitionSB.TestActivity"
             android:label="@string/title_activity_test" />
         <activity
+<<<<<<< HEAD
             android:name="com.socialbrothers.android.imageRecognitionSB.CameraActivity"
+=======
+            android:name=".CameraActivity"
+            android:theme="@style/AppTheme"
+>>>>>>> 55c3ed0c2d06da10480a89130602ea62de919fb7
             android:label="imageRecognitionSB">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

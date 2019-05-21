@@ -19,8 +19,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.SystemClock;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -101,6 +104,10 @@ public class ImageClassifier {
     private View v;
     private Button mBetaalButton;
     private boolean isVisible;
+<<<<<<< HEAD
+=======
+    private TextView productName, title;
+>>>>>>> 55c3ed0c2d06da10480a89130602ea62de919fb7
     private boolean isPressed = false;
     private FirebaseModelInterpreter mInterpreter;
     private FirebaseModelInputOutputOptions mDataOptions;
@@ -146,6 +153,14 @@ public class ImageClassifier {
         this.context = context;
         this.v = v;
         labelList = loadLabelList(activity);
+<<<<<<< HEAD
+=======
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
+        productName = v.findViewById(R.id.text);
+        title = v.findViewById(R.id.title);
+        productName.setTypeface(typeface);
+        title.setTypeface(typeface);
+>>>>>>> 55c3ed0c2d06da10480a89130602ea62de919fb7
         imgData =
                 ByteBuffer.allocateDirect(
                         4 * DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
