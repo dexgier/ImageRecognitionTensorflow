@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "237873709347",
+    "firebase_url": "https://imagerecognitionsbproject.firebaseio.com",
+    "project_id": "imagerecognitionsbproject",
+    "storage_bucket": "imagerecognitionsbproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237873709347:android:2a41505da4d628d5",
+        "android_client_info": {
+          "package_name": "android.sb.com.imagerecognitionSB"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237873709347-8rjvr004cra4imhc109eo7d53v6724lu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.sb.com.imagerecognitionSB",
+            "certificate_hash": "9ec314aeda38a03bb01d928d22bc99836c93708b"
+          }
+        },
+        {
+          "client_id": "237873709347-b1k0hrd93fmqurk7g224fob03r0slcp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPFcvY14IfD8CJzyvm711YghIk4hr9gcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237873709347-b1k0hrd93fmqurk7g224fob03r0slcp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
