@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name=".CameraActivity"
-            android:theme="@style/AppTheme.CustomTheme"
+            android:theme="@style/AppTheme"
             android:label="imageRecognitionSB">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
