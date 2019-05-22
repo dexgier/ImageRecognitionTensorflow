@@ -20,10 +20,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.socialbrothers.android.imageRecognitionSB.TestActivity"
-            android:label="@string/title_activity_test" />
+            android:name=".Alternatives"
+            android:theme="@style/AppTheme.CustomTheme">
+        </activity>
         <activity
-            android:name="com.socialbrothers.android.imageRecognitionSB.CameraActivity"
+            android:name=".CameraActivity"
+            android:theme="@style/AppTheme"
             android:label="imageRecognitionSB">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,9 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".View.ShoppingCartActivity"
+        <activity
+            android:name=".View.ShoppingCartActivity"
             android:label="ShoppingCartActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
