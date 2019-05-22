@@ -3,6 +3,7 @@ package com.socialbrothers.android.imageRecognitionSB.View;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Controller.MainViewModel;
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
+import com.socialbrothers.android.imageRecognitionSB.ImageClassifier;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
@@ -41,11 +43,14 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
+	private String scannedProduct;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.content_shopping_cart);
+		
+		scannedProduct = getIntent().getStringExtra(ImageClassifier.PRODUCT_NAME);
 		
 		mRecyclerView = findViewById(R.id.recy);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
@@ -55,7 +60,22 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		initButton();
 		initObserver();
 		initViewModel();
-		initSpinner();
+		//initSpinner();
+		//addProduct();
+	}
+	
+	private void addProduct() {
+		for (ProductList p : mProducts) {
+			if (scannedProduct.equals(p.getName())) {
+				p.setProductCount(p.getProductCount() + 1);
+				mMainViewModel.update(p);
+				return;
+			}
+		}
+		 
+		final ProductList productList = new ProductList(scannedProduct, 1.3, 1, 1);
+		productList.addObserver(mObserver);
+		mMainViewModel.insert(productList);
 	}
 	
 	private void initButton() {
@@ -63,17 +83,18 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				for (ProductList p : mProducts) {
-					if (mSpinner.getSelectedItem().toString().equals(p.getName())) {
+				addProduct();
+				/*for (ProductList p : mProducts) {
+					if (mSpinner.getSelectedItem().toString().equals(p.getName()) scannedProduct.equals(p.getName())) {
 						p.setProductCount(p.getProductCount() + 1);
 						mMainViewModel.update(p);
 						return;
 					}
 				}
 				
-				final ProductList productList = new ProductList(mSpinner.getSelectedItem().toString(), 1.3, 1, 1);
+				final ProductList productList = new ProductList(mSpinner.getSelectedItem().toString() scannedProduct, 1.3, 1, 1);
 				productList.addObserver(mObserver);
-				mMainViewModel.insert(productList);
+				mMainViewModel.insert(productList);*/
 			}
 		});
 	}
@@ -119,7 +140,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	}
 	
 	private void initSpinner() {
-		mSpinner = findViewById(R.id.spinner);
+		// mSpinner = findViewById(R.id.spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.products, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

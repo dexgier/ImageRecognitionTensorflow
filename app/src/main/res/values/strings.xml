@@ -22,13 +22,44 @@
     <string name="toggle_turn_off">NN:Off</string>
     <string name="toggle">Use NNAPI</string>
     <string name="title_activity_test">TestActivity</string>
-    
     <string-array name="products">
-        <item>apple</item>
         <item>ananas</item>
-        <item>banaaaaan</item>
+        <item>avocado</item>
+        <item>banaan</item>
+        <item>citroen</item>
+        <item>courgette</item>
+        <item>croissant</item>
+        <item>elstar</item>
+        <item>grannysmith</item>
+        <item>jonagold</item>
+        <item>kiwi</item>
+        <item>komkommer</item>
+        <item>mandarijn</item>
+        <item>pistolet wit</item>
+        <item>prei</item>
+        <item>rode ui</item>
+        <item>royal gala</item>
+        <item>witte ui</item>
+        <item>zoete aardappel</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+    
+    <!-- <item name="ananas.currentPrice">1</item>
+    <item name="avocado.currentPrice">1</item>
+    <item name="banaan.currentPrice">1</item>
+    <item name="citroen.curr
+    entPrice">1</item>
+    <item name="courgette.currentPrice">1</item>
+    <item name="croissant.currentPrice">1</item>
+    <item name="elstar.currentPrice">1</item>
+    <item name="grannysmith.currentPrice">1</item>
+    <item name="jonagold.currentPrice">1</item>
+    <item name="kiwi.currentPrice">1</item>
+    <item name="komkommer.currentPrice">1</item>
+    <item name="mandarijn.currentPrice">1</item>
+    <item name="pistoletwit.currentPrice">1</item>
+    <item name="ananas.currentPrice">1</item>
+    <item name="ananas.currentPrice">1</item> -->
+    
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="noMoney">€0,00</string>
 </resources>
