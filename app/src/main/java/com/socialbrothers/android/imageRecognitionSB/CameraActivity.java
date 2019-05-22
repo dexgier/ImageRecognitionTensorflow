@@ -16,6 +16,7 @@ limitations under the License.
 package com.socialbrothers.android.imageRecognitionSB;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 
