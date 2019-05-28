@@ -27,8 +27,12 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.ml.common.FirebaseMLException;
 import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -104,10 +108,7 @@ public class ImageClassifier {
     private View v;
     private Button mBetaalButton;
     private boolean isVisible;
-<<<<<<< HEAD
-=======
     private TextView productName, title;
->>>>>>> 55c3ed0c2d06da10480a89130602ea62de919fb7
     private boolean isPressed = false;
     private FirebaseModelInterpreter mInterpreter;
     private FirebaseModelInputOutputOptions mDataOptions;
@@ -153,14 +154,12 @@ public class ImageClassifier {
         this.context = context;
         this.v = v;
         labelList = loadLabelList(activity);
-<<<<<<< HEAD
-=======
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
         title = v.findViewById(R.id.title);
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
->>>>>>> 55c3ed0c2d06da10480a89130602ea62de919fb7
+
         imgData =
                 ByteBuffer.allocateDirect(
                         4 * DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
@@ -370,6 +369,7 @@ public class ImageClassifier {
                     case "zoeteaardappel" : return textToShow + "\n€1,20";
                     default: return textToShow;
                 }
+
             }
             return textToShow;
         } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
