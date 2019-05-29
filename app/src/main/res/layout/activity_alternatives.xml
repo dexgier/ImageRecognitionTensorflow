@@ -58,19 +58,19 @@
             android:id="@+id/imageView4"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/sblogo" />
+            android:src="@drawable/appel" />
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/sblogo" />
+            android:src="@drawable/ananas" />
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/sblogo" />
+            android:src="@drawable/peer" />
     </TableRow>
 
     <Button
