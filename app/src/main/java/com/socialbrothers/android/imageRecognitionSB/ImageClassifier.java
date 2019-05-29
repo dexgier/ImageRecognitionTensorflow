@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.ml.common.FirebaseMLException;
 import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -55,8 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-import static com.socialbrothers.android.imageRecognitionSB.Alternatives.EDIT_PRODUCT;
-
 /**
  * Classifies images with Tensorflow Lite.
  */
@@ -71,6 +72,7 @@ public class ImageClassifier {
      * Name of the model file stored in Assets.
      */
     private static final String MODEL_PATH = "model.tflite";
+
     /**
      * Name of the label file stored in Assets.
      */
@@ -104,8 +106,12 @@ public class ImageClassifier {
     private Interpreter tflite;
     private Context context;
     private View v;
+    private Button mBetaalButton;
     private boolean isVisible;
     private TextView productName, title;
+    private boolean isPressed = false;
+    private FirebaseModelInterpreter mInterpreter;
+    private FirebaseModelInputOutputOptions mDataOptions;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -133,7 +139,12 @@ public class ImageClassifier {
     private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
             new PriorityQueue<>(
                     RESULTS_TO_SHOW,
-                    (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
+                    new Comparator<Map.Entry<String, Float>>() {
+                        @Override
+                        public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
+                            return (o1.getValue()).compareTo(o2.getValue());
+                        }
+                    });
 
     /**
      * Initializes an {@code ImageClassifier}.
@@ -148,6 +159,7 @@ public class ImageClassifier {
         title = v.findViewById(R.id.title);
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
+
         imgData =
                 ByteBuffer.allocateDirect(
                         4 * DIM_BATCH_SIZE * DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y * DIM_PIXEL_SIZE);
@@ -156,30 +168,55 @@ public class ImageClassifier {
         filterLabelProbArray = new float[FILTER_STAGES][labelList.size()];
 
         Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
+        int[] inputDims = {DIM_BATCH_SIZE, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y, DIM_PIXEL_SIZE};
+        int[] outputDims = {DIM_BATCH_SIZE, labelList.size()};
+        try {
+            mDataOptions =
+                    new FirebaseModelInputOutputOptions.Builder()
+                            .setInputFormat(0, FirebaseModelDataType.BYTE, inputDims)
+                            .setOutputFormat(0, FirebaseModelDataType.BYTE, outputDims)
+                            .build();
+            FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions
+                    .Builder()
+                    .requireWifi()
+                    .build();
+            FirebaseLocalModel localModel =
+                    new FirebaseLocalModel.Builder("asset")
+                        .setAssetFilePath(MODEL_PATH).build();
+
+        }catch(FirebaseMLException e){
+            Toast.makeText(context,"Error while setting up the ",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     /**
      * Classifies a frame from the preview stream.
      */
 
+    boolean isthisvisible = false;
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
-        productName = v.findViewById(R.id.text);
-        String productText = printTopKLabels();
-        if(isVisible){
-
+        if(isVisible && !isthisvisible){
             try{
-                productName.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(context, Alternatives.class);
-                intent.putExtra(EDIT_PRODUCT, productText);
-                context.startActivity(intent);
-            }catch(Exception e){
-
-            }
+                mBetaalButton.setVisibility(View.VISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = true;
+        }else if(!isVisible && isthisvisible){
+            try{
+                mBetaalButton.setVisibility(View.INVISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = false;
         }
+        mBetaalButton = v.findViewById(R.id.betaalButton);
+        mBetaalButton.setOnClickListener(v -> {
+            isPressed = true;
+            Intent intent = new Intent(context, ShoppingCartActivity.class);
+            context.startActivity(intent);
+        });
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -189,8 +226,11 @@ public class ImageClassifier {
 
         // smooth the results
         applyFilter();
+
         // print the results
         String textToShow = printTopKLabels();
+        //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
+        //mProductName.setText(textToShow);
         return textToShow;
     }
 
@@ -283,6 +323,10 @@ public class ImageClassifier {
      * Prints top-K labels, to be shown in UI as the results.
      */
 
+    public Map.Entry<String, Float> GetLabel(){
+        return sortedLabels.poll();
+    }
+
     private String printTopKLabels() {
         for (int i = 0; i < labelList.size(); ++i) {
             sortedLabels.add(
@@ -295,12 +339,37 @@ public class ImageClassifier {
         final int size = sortedLabels.size();
         Map.Entry<String, Float> label = sortedLabels.poll();
         for (int i = 0; i < size; ++i) {
+            //Map.Entry<String, Float> label = sortedLabels.poll();
             textToShow = String.format("\n%s", label.getKey(), label.getValue()) + textToShow;
         }
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
                 isVisible=true;
-                return textToShow;
+                switch(label.getKey()){
+                    case "ananas" : return textToShow + "\n€1,75";
+                    case "avocado" : return textToShow + "\n€1,19";
+                    case "banaan" : return textToShow + "\n€0,50";
+                    case "citroen" : return textToShow + "\n€1,15";
+                    case "courgette" : return textToShow + "\n€0,89";
+                    case "croissant" : return textToShow + "\n€1,30";
+                    case "elstar" : return textToShow + "\n€0,34";
+                    case "grannysmith" : return textToShow + "\n€0,57";
+                    case "jonagold" : return textToShow + "\n€0,37";
+                    case "kiwi" : return textToShow + "\n€1,02";
+                    case "komkommer" : return textToShow + "\n€1,02";
+                    case "mandarijn" : return textToShow + "\n€0,60";
+                    case "peer" : return textToShow + "\n€1,65";
+                    case "pistoletbruin" : return textToShow + "\n€1,45";
+                    case "pistoletwit" : return textToShow + "\n€1,45";
+                    case "prei" : return textToShow + "\n€1,25";
+                    case "rodeui" : return textToShow + "\n€0,54";
+                    case "royalgala" : return textToShow + "\n€0,38";
+                    case "tomaat" : return textToShow + "\n€0,40";
+                    case "witteui" : return textToShow + "\n€0,54";
+                    case "zoeteaardappel" : return textToShow + "\n€1,20";
+                    default: return textToShow;
+                }
+
             }
             return textToShow;
         } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;

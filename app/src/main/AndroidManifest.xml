@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Alternatives"
-            android:theme="@style/AppTheme.CustomTheme">
+            >
         </activity>
         <activity
             android:name=".CameraActivity"
