@@ -5,6 +5,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Observable;
 
 @Entity(tableName = "product")
@@ -30,7 +33,11 @@ public class Product extends Observable {
 	public Product(String name, double currentPrice, int resourceId) {
 		this.name = name;
 		this.currentPrice = currentPrice;
-		this.resourceId = resourceId;
+
+		DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+		DatabaseReference yourRef = rootRef.child("artpics").push();
+		Product product = new Product("", 0, 0);
+		yourRef.setValue(product);
 	}
 	
 	public Long getId() {
