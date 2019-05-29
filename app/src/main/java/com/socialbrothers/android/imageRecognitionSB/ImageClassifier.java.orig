@@ -200,15 +200,53 @@ public class ImageClassifier {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
+<<<<<<< HEAD
+        if(isVisible && !isthisvisible){
+=======
+<<<<<<< HEAD
+        if(isVisible && !isthisvisible){
             try{
-                productName.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(context, Alternatives.class);
-                intent.putExtra(EDIT_PRODUCT, productText);
-                context.startActivity(intent);
-            }catch(Exception e){
-
-            }
+                mBetaalButton.setVisibility(View.VISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = true;
+        }else if(!isVisible && isthisvisible){
+            try{
+                mBetaalButton.setVisibility(View.INVISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = false;
         }
+        mBetaalButton = v.findViewById(R.id.betaalButton);
+        mBetaalButton.setOnClickListener(v -> {
+            isPressed = true;
+            Intent intent = new Intent(context, ShoppingCartActivity.class);
+            context.startActivity(intent);
+        });
+=======
+        productName = v.findViewById(R.id.text);
+        String productText = printTopKLabels();
+        if(isVisible){
+
+>>>>>>> 737699e09e75bf0abaf9dcfe00a468f667fe8131
+            try{
+                mBetaalButton.setVisibility(View.VISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = true;
+        }else if(!isVisible && isthisvisible){
+            try{
+                mBetaalButton.setVisibility(View.INVISIBLE);
+            }catch(Exception e){ }
+            isthisvisible = false;
+        }
+<<<<<<< HEAD
+        mBetaalButton = v.findViewById(R.id.betaalButton);
+        mBetaalButton.setOnClickListener(v -> {
+            isPressed = true;
+            Intent intent = new Intent(context, ShoppingCartActivity.class);
+            context.startActivity(intent);
+        });
+=======
+>>>>>>> 85521e8a064958a756b8763dd0e7399011c5aa94
+>>>>>>> 737699e09e75bf0abaf9dcfe00a468f667fe8131
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -221,8 +259,16 @@ public class ImageClassifier {
 
         // print the results
         String textToShow = printTopKLabels();
+<<<<<<< HEAD
         //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
         //mProductName.setText(textToShow);
+=======
+<<<<<<< HEAD
+        //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
+        //mProductName.setText(textToShow);
+=======
+>>>>>>> 85521e8a064958a756b8763dd0e7399011c5aa94
+>>>>>>> 737699e09e75bf0abaf9dcfe00a468f667fe8131
         return textToShow;
     }
 
