@@ -296,7 +296,7 @@ public class Camera2BasicFragment extends Fragment
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     try {
-      classifier = new ImageClassifier(getActivity(),getContext(),getView());
+      classifier = new ImageClassifier(getActivity(),getActivity(),getView());
     } catch (IOException e) {
       Log.e(TAG, "Failed to initialize an image classifier.");
     }
