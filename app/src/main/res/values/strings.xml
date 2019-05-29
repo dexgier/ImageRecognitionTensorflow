@@ -22,7 +22,7 @@
     <string name="toggle_turn_off">NN:Off</string>
     <string name="toggle">Use NNAPI</string>
     <string name="title_activity_test">TestActivity</string>
-
+    
     <string-array name="products">
         <item>apple</item>
         <item>ananas</item>

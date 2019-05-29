@@ -72,7 +72,6 @@ public class ImageClassifier {
      * Name of the model file stored in Assets.
      */
     private static final String MODEL_PATH = "model.tflite";
-
     /**
      * Name of the label file stored in Assets.
      */
@@ -106,12 +105,8 @@ public class ImageClassifier {
     private Interpreter tflite;
     private Context context;
     private View v;
-    private Button mBetaalButton;
     private boolean isVisible;
     private TextView productName, title;
-    private boolean isPressed = false;
-    private FirebaseModelInterpreter mInterpreter;
-    private FirebaseModelInputOutputOptions mDataOptions;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -139,12 +134,7 @@ public class ImageClassifier {
     private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
             new PriorityQueue<>(
                     RESULTS_TO_SHOW,
-                    new Comparator<Map.Entry<String, Float>>() {
-                        @Override
-                        public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
-                            return (o1.getValue()).compareTo(o2.getValue());
-                        }
-                    });
+                    (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
 
     /**
      * Initializes an {@code ImageClassifier}.
@@ -168,38 +158,18 @@ public class ImageClassifier {
         filterLabelProbArray = new float[FILTER_STAGES][labelList.size()];
 
         Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
-        int[] inputDims = {DIM_BATCH_SIZE, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y, DIM_PIXEL_SIZE};
-        int[] outputDims = {DIM_BATCH_SIZE, labelList.size()};
-        try {
-            mDataOptions =
-                    new FirebaseModelInputOutputOptions.Builder()
-                            .setInputFormat(0, FirebaseModelDataType.BYTE, inputDims)
-                            .setOutputFormat(0, FirebaseModelDataType.BYTE, outputDims)
-                            .build();
-            FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions
-                    .Builder()
-                    .requireWifi()
-                    .build();
-            FirebaseLocalModel localModel =
-                    new FirebaseLocalModel.Builder("asset")
-                        .setAssetFilePath(MODEL_PATH).build();
-
-        }catch(FirebaseMLException e){
-            Toast.makeText(context,"Error while setting up the ",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
 
     /**
      * Classifies a frame from the preview stream.
      */
 
-    boolean isthisvisible = false;
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
+<<<<<<< HEAD
         if(isVisible && !isthisvisible){
             try{
                 mBetaalButton.setVisibility(View.VISIBLE);
@@ -217,6 +187,21 @@ public class ImageClassifier {
             Intent intent = new Intent(context, ShoppingCartActivity.class);
             context.startActivity(intent);
         });
+=======
+        productName = v.findViewById(R.id.text);
+        String productText = printTopKLabels();
+        if(isVisible){
+
+            try{
+                productName.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(context, Alternatives.class);
+                intent.putExtra(EDIT_PRODUCT, productText);
+                context.startActivity(intent);
+            }catch(Exception e){
+
+            }
+        }
+>>>>>>> 85521e8a064958a756b8763dd0e7399011c5aa94
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -226,11 +211,13 @@ public class ImageClassifier {
 
         // smooth the results
         applyFilter();
-
         // print the results
         String textToShow = printTopKLabels();
+<<<<<<< HEAD
         //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
         //mProductName.setText(textToShow);
+=======
+>>>>>>> 85521e8a064958a756b8763dd0e7399011c5aa94
         return textToShow;
     }
 
@@ -323,10 +310,6 @@ public class ImageClassifier {
      * Prints top-K labels, to be shown in UI as the results.
      */
 
-    public Map.Entry<String, Float> GetLabel(){
-        return sortedLabels.poll();
-    }
-
     private String printTopKLabels() {
         for (int i = 0; i < labelList.size(); ++i) {
             sortedLabels.add(
@@ -339,7 +322,6 @@ public class ImageClassifier {
         final int size = sortedLabels.size();
         Map.Entry<String, Float> label = sortedLabels.poll();
         for (int i = 0; i < size; ++i) {
-            //Map.Entry<String, Float> label = sortedLabels.poll();
             textToShow = String.format("\n%s", label.getKey(), label.getValue()) + textToShow;
         }
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
