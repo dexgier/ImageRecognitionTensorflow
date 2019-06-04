@@ -72,6 +72,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 				}
 				
 				final ProductList productList = new ProductList(mSpinner.getSelectedItem().toString(), 1.3, 1, 1);
+
 				productList.addObserver(mObserver);
 				mMainViewModel.insert(productList);
 			}
