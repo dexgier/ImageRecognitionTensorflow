@@ -5,14 +5,14 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Debug;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.io.Serializable;
 import java.util.Observable;
 
 @Entity(tableName = "product")
-public class Product extends Observable implements Serializable {
+public class Product extends Observable implements Parcelable {
 	
 	@PrimaryKey(autoGenerate = true)
 	private Long id;
@@ -36,6 +36,30 @@ public class Product extends Observable implements Serializable {
 		this.currentPrice = currentPrice;
 		this.resourceId = resourceId;
 	}
+
+	protected Product(Parcel in) {
+		if (in.readByte() == 0) {
+			id = null;
+		} else {
+			id = in.readLong();
+		}
+		name = in.readString();
+		currentPrice = in.readDouble();
+		standardPrice = in.readDouble();
+		resourceId = in.readInt();
+	}
+
+	public static final Creator<Product> CREATOR = new Creator<Product>() {
+		@Override
+		public Product createFromParcel(Parcel in) {
+			return new Product(in);
+		}
+
+		@Override
+		public Product[] newArray(int size) {
+			return new Product[size];
+		}
+	};
 
 	public Long getId() {
 		return id;
@@ -81,4 +105,23 @@ public class Product extends Observable implements Serializable {
 	}
 	
 	public void pricesChanged() { }
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		if (id == null) {
+			dest.writeByte((byte) 0);
+		} else {
+			dest.writeByte((byte) 1);
+			dest.writeLong(id);
+		}
+		dest.writeString(name);
+		dest.writeDouble(currentPrice);
+		dest.writeDouble(standardPrice);
+		dest.writeInt(resourceId);
+	}
 }

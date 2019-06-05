@@ -29,7 +29,6 @@ import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -59,11 +58,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		initObserver();
 		initViewModel();
 		initSpinner();
-		mProducts = new ArrayList<>();
 		testProduct = (Product)getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
-		//Log.d("Product:", testProduct.getName());
-		//addProduct(testProduct);
-		addProduct(testProduct);
+		addProduct();
 
 	}
 	
@@ -130,16 +126,16 @@ public class ShoppingCartActivity extends AppCompatActivity {
 			}
 		});
 	}
-	private void addProduct(Product product) {
+	private void addProduct() {
 		for (ProductList p : mProducts) {
-			if (testProduct.getName() == p.getName()) {
-			p.setProductCount(p.getProductCount() + 1);
-			mMainViewModel.update(p);
-			return;
+			if (testProduct.equals(p.getName())) {
+				p.setProductCount(p.getProductCount() + 1);
+				mMainViewModel.update(p);
+				return;
+			}
 		}
-	}
 
-		final ProductList productList = new ProductList(product.getName(), 1.3, 1, 1);
+		final ProductList productList = new ProductList(testProduct.getName(), 1.3, 1, 1);
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}

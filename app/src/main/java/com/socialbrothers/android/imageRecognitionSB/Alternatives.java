@@ -77,12 +77,10 @@ public class Alternatives extends AppCompatActivity {
         });
         imgViewAlternative2.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
-            intent.putExtra(KEY_PRODUCT, Ananas);
             this.startActivity(intent);
         });
         imgViewAlternative3.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
-            intent.putExtra(KEY_PRODUCT, Peer);
             this.startActivity(intent);
         });
     }
