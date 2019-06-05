@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -106,6 +107,7 @@ public class ImageClassifier {
     private View v;
     private boolean isVisible;
     private TextView productName, title;
+    private at.markushi.ui.CircleButton scanButton;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -168,18 +170,34 @@ public class ImageClassifier {
             return "Uninitialized Classifier.";
         }
         productName = v.findViewById(R.id.text);
+        scanButton = v.findViewById(R.id.scanButton);
         String productText = printTopKLabels();
-        if(isVisible){
-
-            try{
-                productName.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(context, Alternatives.class);
-                intent.putExtra(EDIT_PRODUCT, productText);
-                context.startActivity(intent);
-            }catch(Exception e){
-
+        scanButton.setOnTouchListener((v, event) -> {
+            if(event.getAction()==MotionEvent.ACTION_DOWN){
+                if(isVisible){
+                    try{
+                        productName.setVisibility(View.INVISIBLE);
+                        Intent intent = new Intent(context, Alternatives.class);
+                        intent.putExtra(EDIT_PRODUCT, productText);
+                        context.startActivity(intent);
+                    }catch(Exception e){
+                    }
+                }
+            }else{
             }
-        }
+            return true;
+        });
+//        if(isVisible){
+//
+//            try{
+//                productName.setVisibility(View.INVISIBLE);
+//                Intent intent = new Intent(context, Alternatives.class);
+//                intent.putExtra(EDIT_PRODUCT, productText);
+//                context.startActivity(intent);
+//            }catch(Exception e){
+//
+//            }
+//        }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
