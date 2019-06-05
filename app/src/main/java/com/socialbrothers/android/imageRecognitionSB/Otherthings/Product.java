@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Debug;
+import android.os.Parcelable;
+import android.util.Log;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 @Entity(tableName = "product")
-public class Product extends Observable {
+public class Product extends Observable implements Serializable {
 	
 	@PrimaryKey(autoGenerate = true)
 	private Long id;
@@ -32,7 +36,7 @@ public class Product extends Observable {
 		this.currentPrice = currentPrice;
 		this.resourceId = resourceId;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -68,6 +72,7 @@ public class Product extends Observable {
 	}
 	
 	public int getResourceId() {
+		Log.d("Resource ID:", String.valueOf(resourceId));
 		return resourceId;
 	}
 	

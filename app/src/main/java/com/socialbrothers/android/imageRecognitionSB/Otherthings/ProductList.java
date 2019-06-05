@@ -45,5 +45,4 @@ public class ProductList extends Product {
 		setChanged();
 		notifyObservers();
 	}
-	
 }

@@ -19,13 +19,17 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.socialbrothers.android.imageRecognitionSB.Alternatives;
 import com.socialbrothers.android.imageRecognitionSB.Controller.MainViewModel;
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -41,7 +45,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
-	
+	private Product testProduct;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,32 +55,16 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
 		mRecyclerView.setAdapter(mProductAdapter);
 		mTotalPriceView = findViewById(R.id.totalPriceView);
-		mAlert = new AlertDialog.Builder(   this);
-		initButton();
+		mAlert = new AlertDialog.Builder(this);
 		initObserver();
 		initViewModel();
 		initSpinner();
-	}
-	
-	private void initButton() {
-		mButton = findViewById(R.id.buttonAddProduct);
-		mButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				for (ProductList p : mProducts) {
-					if (mSpinner.getSelectedItem().toString().equals(p.getName())) {
-						p.setProductCount(p.getProductCount() + 1);
-						mMainViewModel.update(p);
-						return;
-					}
-				}
-				
-				final ProductList productList = new ProductList(mSpinner.getSelectedItem().toString(), 1.3, 1, 1);
+		mProducts = new ArrayList<>();
+		testProduct = (Product)getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
+		//Log.d("Product:", testProduct.getName());
+		//addProduct(testProduct);
+		addProduct(testProduct);
 
-				productList.addObserver(mObserver);
-				mMainViewModel.insert(productList);
-			}
-		});
 	}
 	
 	private void initObserver() {
@@ -142,6 +130,20 @@ public class ShoppingCartActivity extends AppCompatActivity {
 			}
 		});
 	}
+	private void addProduct(Product product) {
+		for (ProductList p : mProducts) {
+			if (testProduct.getName() == p.getName()) {
+			p.setProductCount(p.getProductCount() + 1);
+			mMainViewModel.update(p);
+			return;
+		}
+	}
+
+		final ProductList productList = new ProductList(product.getName(), 1.3, 1, 1);
+		productList.addObserver(mObserver);
+		mMainViewModel.insert(productList);
+	}
+
 	
 	private void setTotalPrice() {
 		double totalPrice = 0;
