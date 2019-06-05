@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -71,7 +72,6 @@ public class ImageClassifier {
      * Name of the model file stored in Assets.
      */
     private static final String MODEL_PATH = "model.tflite";
-
     /**
      * Name of the label file stored in Assets.
      */
@@ -102,15 +102,17 @@ public class ImageClassifier {
     /**
      * An instance of the driver class to run model inference with Tensorflow Lite.
      */
+
+    //onze variabelen
     private Interpreter tflite;
     private Context context;
     private View v;
-    private Button mBetaalButton;
     private boolean isVisible;
     private TextView productName, title;
-    private boolean isPressed = false;
-    private FirebaseModelInterpreter mInterpreter;
-    private FirebaseModelInputOutputOptions mDataOptions;
+    private Button scanButton;
+    private boolean isButtonPressed;
+
+    //button beginscanne
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -138,12 +140,7 @@ public class ImageClassifier {
     private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
             new PriorityQueue<>(
                     RESULTS_TO_SHOW,
-                    new Comparator<Map.Entry<String, Float>>() {
-                        @Override
-                        public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
-                            return (o1.getValue()).compareTo(o2.getValue());
-                        }
-                    });
+                    (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
 
     /**
      * Initializes an {@code ImageClassifier}.
@@ -156,6 +153,7 @@ public class ImageClassifier {
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
         title = v.findViewById(R.id.title);
+        //oproepen
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
         imgData =
@@ -166,69 +164,44 @@ public class ImageClassifier {
         filterLabelProbArray = new float[FILTER_STAGES][labelList.size()];
 
         Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
-        int[] inputDims = {DIM_BATCH_SIZE, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y, DIM_PIXEL_SIZE};
-        int[] outputDims = {DIM_BATCH_SIZE, labelList.size()};
-        try {
-            mDataOptions =
-                    new FirebaseModelInputOutputOptions.Builder()
-                            .setInputFormat(0, FirebaseModelDataType.BYTE, inputDims)
-                            .setOutputFormat(0, FirebaseModelDataType.BYTE, outputDims)
-                            .build();
-            FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions
-                    .Builder()
-                    .requireWifi()
-                    .build();
-            FirebaseLocalModel localModel =
-                    new FirebaseLocalModel.Builder("asset")
-                        .setAssetFilePath(MODEL_PATH).build();
-
-        }catch(FirebaseMLException e){
-            Toast.makeText(context,"Error while setting up the ",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
 
     /**
      * Classifies a frame from the preview stream.
      */
 
-    boolean isthisvisible = false;
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
-        /*
-        if(isVisible && !isthisvisible){
-            try{
-                mBetaalButton.setVisibility(View.VISIBLE);
-            }catch(Exception e){ }
-            isthisvisible = true;
-        }else if(!isVisible && isthisvisible){
-            try{
-                mBetaalButton.setVisibility(View.INVISIBLE);
-            }catch(Exception e){ }
-            isthisvisible = false;
-        }
-        mBetaalButton = v.findViewById(R.id.betaalButton);
-        mBetaalButton.setOnClickListener(v -> {
-            isPressed = true;
-            Intent intent = new Intent(context, Alternatives.class);
-            context.startActivity(intent);
-        });
-        */
-        productName = v.findViewById(R.id.text);
+//        productName = v.findViewById(R.id.text);
         String productText = printTopKLabels();
-        if(isVisible){
+        productName.setVisibility(View.INVISIBLE);
 
-            try{
-                productName.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(context, Alternatives.class);
-                intent.putExtra(EDIT_PRODUCT, productText);
-                context.startActivity(intent);
-            }catch(Exception e){
+        scanButton = v.findViewById(R.id.scan_button);
+        scanButton.setVisibility(View.INVISIBLE);
 
+
+        // Hieronder in try komt alles !!
+        if (isVisible) {
+
+            try {
+                ButtonPress();
+
+
+                //als button is ingedrukt
+                if (isButtonPressed) {
+                    Intent intent = new Intent(context, Alternatives.class);
+                    intent.putExtra(EDIT_PRODUCT, productText);
+                    context.startActivity(intent);
+                }     //else button is niet ingedrukt
+
+
+            } catch (Exception e) {
             }
+
+
         }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
@@ -239,14 +212,8 @@ public class ImageClassifier {
 
         // smooth the results
         applyFilter();
-
         // print the results
         String textToShow = printTopKLabels();
-        //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
-        //mProductName.setText(textToShow);
-
-
-
         return textToShow;
     }
 
@@ -339,10 +306,6 @@ public class ImageClassifier {
      * Prints top-K labels, to be shown in UI as the results.
      */
 
-    public Map.Entry<String, Float> GetLabel(){
-        return sortedLabels.poll();
-    }
-
     private String printTopKLabels() {
         for (int i = 0; i < labelList.size(); ++i) {
             sortedLabels.add(
@@ -355,16 +318,40 @@ public class ImageClassifier {
         final int size = sortedLabels.size();
         Map.Entry<String, Float> label = sortedLabels.poll();
         for (int i = 0; i < size; ++i) {
-            //Map.Entry<String, Float> label = sortedLabels.poll();
             textToShow = String.format("\n%s", label.getKey(), label.getValue()) + textToShow;
         }
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
-                isVisible=true;
+                isVisible = true;
+                scanButton.setVisibility(View.VISIBLE);
                 return textToShow;
             }
             return textToShow;
-        } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
+        } else if (label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
+        scanButton.setVisibility(View.INVISIBLE);
         return WARNING_MINIMUM_RECOGNITION_TRESHOLD;
+    }
+
+    public void ButtonPress() {
+
+        scanButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        isButtonPressed = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        isButtonPressed = false;
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        isButtonPressed = false;
+                        break;
+
+                }
+                return isButtonPressed;
+            }
+        });
     }
 }

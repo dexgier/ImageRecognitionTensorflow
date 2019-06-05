@@ -45,7 +45,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		final ProductList product = productList.get(i);
 		DecimalFormat df = new DecimalFormat("€0.00");
 		
-		viewHolder.productImage.setImageResource(R.drawable.common_google_signin_btn_icon_dark);
+	//	viewHolder.productImage.setImageResource(product.getResourceId());
 		viewHolder.productName.setText(product.getName());
 		viewHolder.currentPrice.setText(df.format(product.getCurrentPrice()));
 		viewHolder.amountOfProducts.setText(String.valueOf(product.getProductCount()));

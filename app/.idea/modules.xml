@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../ImageRecognitionSB.iml" filepath="$PROJECT_DIR$/../ImageRecognitionSB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ImageRecognitionTensorflow.iml" filepath="$PROJECT_DIR$/../ImageRecognitionTensorflow.iml" />
       <module fileurl="file://$PROJECT_DIR$/app.iml" filepath="$PROJECT_DIR$/app.iml" />
     </modules>
   </component>

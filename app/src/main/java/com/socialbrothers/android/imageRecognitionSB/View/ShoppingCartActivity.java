@@ -3,7 +3,6 @@ package com.socialbrothers.android.imageRecognitionSB.View;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,14 +19,17 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.socialbrothers.android.imageRecognitionSB.Alternatives;
 import com.socialbrothers.android.imageRecognitionSB.Controller.MainViewModel;
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
-import com.socialbrothers.android.imageRecognitionSB.ImageClassifier;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -43,60 +45,26 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
-	private String scannedProduct;
-	
+	private Product testProduct;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.content_shopping_cart);
 		
-		scannedProduct = getIntent().getStringExtra(ImageClassifier.PRODUCT_NAME);
-		
 		mRecyclerView = findViewById(R.id.recy);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
 		mRecyclerView.setAdapter(mProductAdapter);
 		mTotalPriceView = findViewById(R.id.totalPriceView);
-		mAlert = new AlertDialog.Builder(   this);
-		initButton();
+		mAlert = new AlertDialog.Builder(this);
 		initObserver();
 		initViewModel();
-		//initSpinner();
-		//addProduct();
-	}
-	
-	private void addProduct() {
-		for (ProductList p : mProducts) {
-			if (scannedProduct.equals(p.getName())) {
-				p.setProductCount(p.getProductCount() + 1);
-				mMainViewModel.update(p);
-				return;
-			}
-		}
-		 
-		final ProductList productList = new ProductList(scannedProduct, 1.3, 1, 1);
-		productList.addObserver(mObserver);
-		mMainViewModel.insert(productList);
-	}
-	
-	private void initButton() {
-		mButton = findViewById(R.id.buttonAddProduct);
-		mButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				addProduct();
-				/*for (ProductList p : mProducts) {
-					if (mSpinner.getSelectedItem().toString().equals(p.getName()) scannedProduct.equals(p.getName())) {
-						p.setProductCount(p.getProductCount() + 1);
-						mMainViewModel.update(p);
-						return;
-					}
-				}
-				
-				final ProductList productList = new ProductList(mSpinner.getSelectedItem().toString() scannedProduct, 1.3, 1, 1);
-				productList.addObserver(mObserver);
-				mMainViewModel.insert(productList);*/
-			}
-		});
+		initSpinner();
+		mProducts = new ArrayList<>();
+		testProduct = (Product)getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
+		//Log.d("Product:", testProduct.getName());
+		//addProduct(testProduct);
+		addProduct(testProduct);
+
 	}
 	
 	private void initObserver() {
@@ -140,7 +108,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	}
 	
 	private void initSpinner() {
-		// mSpinner = findViewById(R.id.spinner);
+		mSpinner = findViewById(R.id.spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 				R.array.products, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -162,6 +130,20 @@ public class ShoppingCartActivity extends AppCompatActivity {
 			}
 		});
 	}
+	private void addProduct(Product product) {
+		for (ProductList p : mProducts) {
+			if (testProduct.getName() == p.getName()) {
+			p.setProductCount(p.getProductCount() + 1);
+			mMainViewModel.update(p);
+			return;
+		}
+	}
+
+		final ProductList productList = new ProductList(product.getName(), 1.3, 1, 1);
+		productList.addObserver(mObserver);
+		mMainViewModel.insert(productList);
+	}
+
 	
 	private void setTotalPrice() {
 		double totalPrice = 0;
