@@ -43,7 +43,6 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -91,13 +90,6 @@ public class Camera2BasicFragment extends Fragment
   private static final int MAX_PREVIEW_WIDTH = 1920;
   /** Max preview height that is guaranteed by Camera2 API */
   private static final int MAX_PREVIEW_HEIGHT = 1080;
-
-  CountDownTimer countDownTimer;
-  private static final long START_TIME_IN_MILLIS = 3000;
-  private long timeLeftUntilFinish;
-  private boolean isTimerStarted = false;
-
-
   /**
    * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a {@link
    * TextureView}.
@@ -666,30 +658,11 @@ public class Camera2BasicFragment extends Fragment
       showToast("Uninitialized Classifier or invalid context.");
       return;
     }
-
-
-    countDownTimer = new CountDownTimer(timeLeftUntilFinish, 1000) {
-      @Override
-      public void onTick(long millisUntilFinished) {
-        timeLeftUntilFinish = millisUntilFinished;
-
-        if(timeLeftUntilFinish <= 1){
-          Bitmap bitmap =
-                  textureView.getBitmap(ImageClassifier.DIM_IMG_SIZE_X, ImageClassifier.DIM_IMG_SIZE_Y);
-          String textToShow = classifier.classifyFrame(bitmap);
-          bitmap.recycle();
-          showToast(textToShow);
-        }
-
-      }
-
-      @Override
-      public void onFinish() {
-        timeLeftUntilFinish = START_TIME_IN_MILLIS;
-        isTimerStarted = false;
-      }
-    };
-
+    Bitmap bitmap =
+        textureView.getBitmap(ImageClassifier.DIM_IMG_SIZE_X, ImageClassifier.DIM_IMG_SIZE_Y);
+    String textToShow = classifier.classifyFrame(bitmap);
+    bitmap.recycle();
+    showToast(textToShow);
   }
 
   /** Compares two {@code Size}s based on their areas. */

@@ -25,7 +25,6 @@ import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -102,17 +101,11 @@ public class ImageClassifier {
     /**
      * An instance of the driver class to run model inference with Tensorflow Lite.
      */
-
-    //onze variabelen
     private Interpreter tflite;
     private Context context;
     private View v;
     private boolean isVisible;
     private TextView productName, title;
-    private Button scanButton;
-    private boolean isButtonPressed;
-
-    //button beginscanne
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -153,7 +146,6 @@ public class ImageClassifier {
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
         title = v.findViewById(R.id.title);
-        //oproepen
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
         imgData =
@@ -175,33 +167,18 @@ public class ImageClassifier {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
-//        productName = v.findViewById(R.id.text);
+        productName = v.findViewById(R.id.text);
         String productText = printTopKLabels();
-        productName.setVisibility(View.INVISIBLE);
+        if(isVisible){
 
-        scanButton = v.findViewById(R.id.scan_button);
-        scanButton.setVisibility(View.INVISIBLE);
+            try{
+                productName.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(context, Alternatives.class);
+                intent.putExtra(EDIT_PRODUCT, productText);
+                context.startActivity(intent);
+            }catch(Exception e){
 
-
-        // Hieronder in try komt alles !!
-        if (isVisible) {
-
-            try {
-                ButtonPress();
-
-
-                //als button is ingedrukt
-                if (isButtonPressed) {
-                    Intent intent = new Intent(context, Alternatives.class);
-                    intent.putExtra(EDIT_PRODUCT, productText);
-                    context.startActivity(intent);
-                }     //else button is niet ingedrukt
-
-
-            } catch (Exception e) {
             }
-
-
         }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
@@ -322,36 +299,11 @@ public class ImageClassifier {
         }
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
-                isVisible = true;
-                scanButton.setVisibility(View.VISIBLE);
+                isVisible=true;
                 return textToShow;
             }
             return textToShow;
-        } else if (label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
-        scanButton.setVisibility(View.INVISIBLE);
+        } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
         return WARNING_MINIMUM_RECOGNITION_TRESHOLD;
-    }
-
-    public void ButtonPress() {
-
-        scanButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        isButtonPressed = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isButtonPressed = false;
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        isButtonPressed = false;
-                        break;
-
-                }
-                return isButtonPressed;
-            }
-        });
     }
 }
