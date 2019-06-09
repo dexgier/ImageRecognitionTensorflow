@@ -42,10 +42,10 @@ public class ShoppingListItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         // Very important to use writeInt, writeString etc etc, writeValue will either not write anything
-        // or it will write a strange String, because it doesn't take the actual value of the passed variable
-        dest.writeInt(id);
-        dest.writeString(item);
-        dest.writeDouble(price);
+        // or it will write the ID of the item
+        dest.writeInt(this.id);
+        dest.writeString(this.item);
+        dest.writeDouble(this.price);
     }
 
     @Override

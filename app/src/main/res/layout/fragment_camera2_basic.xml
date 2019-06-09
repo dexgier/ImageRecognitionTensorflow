@@ -19,6 +19,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/shoppinglistButton"
+        android:layout_width="46dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shoppinglist"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/control2"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="@+id/control2"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.socialbrothers.android.imageRecognitionSB.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"

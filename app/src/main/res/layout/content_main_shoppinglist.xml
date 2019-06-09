@@ -10,10 +10,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_shoppinglist"
-        android:layout_width="395dp"
-        android:layout_height="659dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="668dp"
+        android:layout_marginTop="68dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

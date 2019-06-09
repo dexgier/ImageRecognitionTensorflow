@@ -3,6 +3,7 @@ package com.socialbrothers.android.imageRecognitionSB.View;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -43,6 +44,7 @@ public class ShoppingListActivity extends AppCompatActivity implements RecyclerV
 
         database = ShoppingListDatabase.getDatabase(this);
         executor = Executors.newSingleThreadExecutor();
+
         recyclerView = findViewById(R.id.rv_shoppinglist);
 
         // Add layout, decoration and list to recyclerView
@@ -62,14 +64,33 @@ public class ShoppingListActivity extends AppCompatActivity implements RecyclerV
 
 
         // Add gesturedetector to remove items when they are pressed for a longer time
-        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public void onLongPress(MotionEvent e){
+            public void onLongPress(MotionEvent e) {
                 super.onLongPress(e);
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                if (child != null){
+                if (child != null) {
+
+                    // Get position to find out which item this is
                     int adapterPosition = recyclerView.getChildAdapterPosition(child);
+                    final ShoppingListItem CHECK_ITEM = shoppingList.get(adapterPosition);
+
+                    // Delete item based on position
                     deleteItem(shoppingList.get(adapterPosition));
+                    shoppingList.remove(adapterPosition);
+                    adapter.notifyItemRemoved(adapterPosition);
+
+                    // Create snackbar (bottom pop up) to give user the option to undo the action
+                    Snackbar undoSnackBar = Snackbar.make(child, "Deleted: " + CHECK_ITEM.getItem(), Snackbar.LENGTH_LONG);
+                    undoSnackBar.setAction("Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            insertItem(CHECK_ITEM);
+                        }
+                    });
+                    undoSnackBar.show();
+
+
                 }
             }
         });
@@ -119,6 +140,20 @@ public class ShoppingListActivity extends AppCompatActivity implements RecyclerV
             recyclerView.setAdapter(adapter);
         } else {
             adapter.swapList(shoppingList);
+        }
+    }
+
+    @Override
+    @NonNull
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUESTCODE) {
+            if (resultCode == RESULT_OK) {
+
+                ShoppingListItem addItem = data.getParcelableExtra(ShoppingListActivity.ITEM);
+                insertItem(addItem);
+
+            }
         }
     }
 

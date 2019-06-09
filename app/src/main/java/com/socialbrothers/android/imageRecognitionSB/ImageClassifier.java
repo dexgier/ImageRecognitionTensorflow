@@ -43,6 +43,7 @@ import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
+import com.socialbrothers.android.imageRecognitionSB.View.ShoppingListActivity;
 
 import org.tensorflow.lite.Interpreter;
 
@@ -114,6 +115,7 @@ public class ImageClassifier {
     private boolean canMove;
     private TextView productName, title;
     private at.markushi.ui.CircleButton scanButton;
+    private Button shoppinglistButton;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -162,7 +164,6 @@ public class ImageClassifier {
         imgData.order(ByteOrder.nativeOrder());
         labelProbArray = new float[1][labelList.size()];
         filterLabelProbArray = new float[FILTER_STAGES][labelList.size()];
-
         Log.d(TAG, "Created a Tensorflow Lite Image Classifier.");
     }
 
@@ -178,6 +179,7 @@ public class ImageClassifier {
         }
         productName = v.findViewById(R.id.text);
         scanButton = v.findViewById(R.id.scanButton);
+
         String productText = printTopKLabels();
         scanButton.setOnTouchListener((v, event) -> {
 //            if(event.getAction()==MotionEvent.ACTION_DOWN){
@@ -218,7 +220,7 @@ public class ImageClassifier {
                 case MotionEvent.ACTION_MOVE:
 
                     if (isVisible) {
-                        if(canMove) {
+                        if (canMove) {
                             try {
                                 Intent intent = new Intent(context, Alternatives.class);
                                 intent.putExtra(EDIT_PRODUCT, productText);
@@ -249,6 +251,21 @@ public class ImageClassifier {
             }
             return true;
         });
+
+        shoppinglistButton = (Button) v.findViewById(R.id.shoppinglistButton);
+        shoppinglistButton.setOnTouchListener((v, event) -> {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    try {
+                        Log.e("SHOPPINGLIST: ","The button works ! ");
+                    }catch (Exception e){}
+                }
+                return true;
+        });
+
+
+
+
 //        if(isVisible){
 //
 //            try{
