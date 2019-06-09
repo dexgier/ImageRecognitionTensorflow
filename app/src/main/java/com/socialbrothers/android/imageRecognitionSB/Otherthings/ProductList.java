@@ -12,8 +12,8 @@ public class ProductList extends Product {
 	@ColumnInfo(name = "productCount")
 	private int productCount;
 	
-	public ProductList(String name, double currentPrice, int resourceId, int productCount) {
-		super(name, currentPrice, resourceId);
+	public ProductList(String name, double currentPrice, int resourceId, int productCount, String description) {
+		super(name, currentPrice, resourceId, description);
 		this.totalPrice = currentPrice * productCount;
 		this.productCount = productCount;
 		pricesChanged();

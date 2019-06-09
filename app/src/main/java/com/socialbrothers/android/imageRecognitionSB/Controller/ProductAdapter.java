@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 import com.socialbrothers.android.imageRecognitionSB.View.ProductinfoActivity;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
@@ -31,7 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	public ProductAdapter(Context context, List<ProductList> productList) {
 		this.productList = productList;
 		this.context = context;
-
+		ProductManager.Initialize(context.getResources());
 	}
 	
 	public void swapList(List<ProductList> productList) {

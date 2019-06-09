@@ -15,6 +15,10 @@
 -->
 <resources>
     <string name="picture">Picture</string>
+    <string name="appleDesc">Prachtige Appels</string>
+    <string name="bananaDesc">Ziek leipe maar kromme bananen</string>
+    <string name="pearDesc">Peren zijn groen en teringlekker</string>
+
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
@@ -24,10 +28,8 @@
     <string name="title_activity_test">TestActivity</string>
     //product info
     <string name="product_Title_Placeholder">Product Title</string>
-    <string name="product_Price_Placeholder">5,00</string>v
+    <string name="product_Price_Placeholder">5,00</string>
     <string name="backgroundImage">backgroundImage</string>
-
-
 
     <string-array name="products">
         <item>apple</item>
