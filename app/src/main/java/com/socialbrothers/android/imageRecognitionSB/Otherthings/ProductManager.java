@@ -22,15 +22,15 @@ public class ProductManager {
 	}
 	
 	private static void addProducts() {
-		products.put("apple", new Product("apple", 5.6, R.drawable.apple, resources.getString(R.string.appleDesc)));
-		products.put("banana", new Product("banana", 5.6, R.drawable.banana, resources.getString(R.string.bananaDesc)));
-		products.put("croissant", new Product("croissant", 5.6, R.drawable.croissant, "1"));
-		products.put("cucumber", new Product("cucumber", 5.6, R.drawable.cucumber, "2"));
-		products.put("lemon", new Product("lemon", 5.6, R.drawable.lemon, "3"));
-		products.put("orange", new Product("orange", 5.6, R.drawable.orange, "4"));
-		products.put("pear", new Product("pear", 5.6, R.drawable.pear, resources.getString(R.string.pearDesc)));
-		products.put("tomato", new Product("tomato", 5.6, R.drawable.tomato, "5"));
-		products.put("zucchini", new Product("zucchini", 5.6, R.drawable.zucchini, "6"));
+		products.put("apple", new Product("Appel", 5.6, R.drawable.apple, resources.getString(R.string.appleDesc)));
+		products.put("banana", new Product("Banaan", 5.6, R.drawable.banana, resources.getString(R.string.bananaDesc)));
+		products.put("croissant", new Product("Croissant", 5.6, R.drawable.croissant, "1"));
+		products.put("cucumber", new Product("Komkommer", 5.6, R.drawable.cucumber, "2"));
+		products.put("lemon", new Product("Citroen", 5.6, R.drawable.lemon, "3"));
+		products.put("orange", new Product("Sinaasappel", 5.6, R.drawable.orange, "4"));
+		products.put("pear", new Product("Peer", 5.6, R.drawable.pear, resources.getString(R.string.pearDesc)));
+		products.put("tomato", new Product("Tomaat", 5.6, R.drawable.tomato, "5"));
+		products.put("zucchini", new Product("Courgette", 5.6, R.drawable.zucchini, "6"));
 	}
 	
 	public static void Initialize(Resources _resources) {
