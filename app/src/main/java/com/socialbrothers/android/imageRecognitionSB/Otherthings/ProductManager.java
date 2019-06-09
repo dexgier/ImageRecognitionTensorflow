@@ -14,7 +14,7 @@ public class ProductManager {
         }
 
         for (Product p : productArrayList) {
-            if (p.getName() == name) {
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
@@ -22,9 +22,17 @@ public class ProductManager {
     }
 
     private static void addProducts(ArrayList<Product> productArrayList) {
-        productArrayList.add(new Product("appel", 5.6, R.drawable.appel));
-        productArrayList.add(new Product("ananas", 5.6, R.drawable.ananas));
-        productArrayList.add(new Product("peer", 5.6, R.drawable.peer));
+        productArrayList.add(new Product("apple", 5.6, R.drawable.apple));
+        productArrayList.add(new Product("banana", 5.6, R.drawable.banana));
+        productArrayList.add(new Product("croissant", 5.6, R.drawable.croissant));
+        productArrayList.add(new Product("cucumber", 5.6, R.drawable.cucumber));
+        productArrayList.add(new Product("lemon", 5.6, R.drawable.lemon));
+        productArrayList.add(new Product("orange", 5.6, R.drawable.orange));
+        productArrayList.add(new Product("pear", 5.6, R.drawable.pear));
+        productArrayList.add(new Product("tomato", 5.6, R.drawable.tomato));
+        productArrayList.add(new Product("zucchini", 5.6, R.drawable.zucchini));
+
+
     }
 
 
