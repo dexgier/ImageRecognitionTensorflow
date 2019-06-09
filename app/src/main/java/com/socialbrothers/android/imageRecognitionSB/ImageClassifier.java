@@ -15,6 +15,9 @@ limitations under the License.
 
 package com.socialbrothers.android.imageRecognitionSB;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +28,10 @@ import android.graphics.Typeface;
 import android.os.SystemClock;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,7 +111,9 @@ public class ImageClassifier {
     private Context context;
     private View v;
     private boolean isVisible;
+    private boolean canMove;
     private TextView productName, title;
+    private at.markushi.ui.CircleButton scanButton;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -162,24 +170,96 @@ public class ImageClassifier {
      * Classifies a frame from the preview stream.
      */
 
+    @SuppressLint("ClickableViewAccessibility")
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
         productName = v.findViewById(R.id.text);
+        scanButton = v.findViewById(R.id.scanButton);
         String productText = printTopKLabels();
-        if(isVisible){
+        scanButton.setOnTouchListener((v, event) -> {
+//            if(event.getAction()==MotionEvent.ACTION_DOWN){
+//                if(isVisible){
+//                    try{
+//                        productName.setVisibility(View.INVISIBLE);
+//                        Intent intent = new Intent(context, Alternatives.class);
+//                        intent.putExtra(EDIT_PRODUCT, productText);
+//                        context.startActivity(intent);
+//                    }catch(Exception e){
+//                    }
+//                }
+//            }else{
+//            }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(scanButton, "scaleX", 2f);
+                    ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(scanButton, "scaleY", 2f);
+                    RotateAnimation rotate = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate.setDuration(500);
+                    scanButton.startAnimation(rotate);
+                    scaleDownX.setDuration(500);
+                    scaleDownY.setDuration(500);
 
-            try{
-                productName.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(context, Alternatives.class);
-                intent.putExtra(EDIT_PRODUCT, productText);
-                context.startActivity(intent);
-            }catch(Exception e){
+                    AnimatorSet scaleDown = new AnimatorSet();
+                    scaleDown.play(scaleDownX).with(scaleDownY);
+
+                    scaleDown.start();
+                    if (isVisible) {
+                        try {
+                            Intent intent = new Intent(context, Alternatives.class);
+                            intent.putExtra(EDIT_PRODUCT, productText);
+                            context.startActivity(intent);
+                        } catch (Exception e) {
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+
+                    if (isVisible) {
+                        if(canMove) {
+                            try {
+                                Intent intent = new Intent(context, Alternatives.class);
+                                intent.putExtra(EDIT_PRODUCT, productText);
+                                context.startActivity(intent);
+                                canMove = false;
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    ObjectAnimator scaleDownX2 = ObjectAnimator.ofFloat(scanButton, "scaleX", 1f);
+                    ObjectAnimator scaleDownY2 = ObjectAnimator.ofFloat(scanButton, "scaleY", 1f);
+                    RotateAnimation rotate2 = new RotateAnimation(360, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate2.setDuration(500);
+                    scanButton.startAnimation(rotate2);
+                    scaleDownX2.setDuration(1000);
+                    scaleDownY2.setDuration(1000);
+
+                    AnimatorSet scaleDown2 = new AnimatorSet();
+                    scaleDown2.play(scaleDownX2).with(scaleDownY2);
+
+                    scaleDown2.start();
+                    canMove = true;
+                    //scanButton.setEnabled(false);
+                    break;
 
             }
-        }
+            return true;
+        });
+//        if(isVisible){
+//
+//            try{
+//                productName.setVisibility(View.INVISIBLE);
+//                Intent intent = new Intent(context, Alternatives.class);
+//                intent.putExtra(EDIT_PRODUCT, productText);
+//                context.startActivity(intent);
+//            }catch(Exception e){
+//
+//            }
+//        }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -299,11 +379,11 @@ public class ImageClassifier {
         }
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
-                isVisible=true;
+                isVisible = true;
                 return textToShow;
             }
             return textToShow;
-        } else if(label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
+        } else if (label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
         return WARNING_MINIMUM_RECOGNITION_TRESHOLD;
     }
 }

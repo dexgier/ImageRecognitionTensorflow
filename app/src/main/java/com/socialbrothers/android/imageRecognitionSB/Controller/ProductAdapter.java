@@ -1,7 +1,10 @@
 package com.socialbrothers.android.imageRecognitionSB.Controller;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 import com.socialbrothers.android.imageRecognitionSB.R;
+import com.socialbrothers.android.imageRecognitionSB.View.ProductinfoActivity;
+import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -19,9 +24,14 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 	
 	private List<ProductList> productList;
-	
-	public ProductAdapter(List<ProductList> productList) {
+	private Context context;
+	public static final String KEY_PRODUCT = "1234";
+
+
+	public ProductAdapter(Context context, List<ProductList> productList) {
 		this.productList = productList;
+		this.context = context;
+
 	}
 	
 	public void swapList(List<ProductList> productList) {
@@ -61,6 +71,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 				viewHolder.totalPrice.setText(df.format(product.getTotalPrice()));
 			}
 		});
+		viewHolder.productImage.setImageResource(R.drawable.ic_action_info);
+		viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, ProductinfoActivity.class);
+				intent.putExtra(KEY_PRODUCT,product);
+				context.startActivity(intent);
+			}
+		});
 		
 		viewHolder.remove.setImageResource(R.drawable.baseline_remove_circle_black_24dp);
 		viewHolder.remove.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +91,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 				viewHolder.totalPrice.setText(df.format(product.getTotalPrice()));
 			}
 		});
-		
-		
 	}
 	
 	@Override
@@ -105,6 +122,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 			remove = itemView.findViewById(R.id.imageButtonRemove);
 		}
 	}
-	
-	
+
 }

@@ -22,6 +22,12 @@
     <string name="toggle_turn_off">NN:Off</string>
     <string name="toggle">Use NNAPI</string>
     <string name="title_activity_test">TestActivity</string>
+    //product info
+    <string name="product_Title_Placeholder">Product Title</string>
+    <string name="product_Price_Placeholder">5,00</string>v
+    <string name="backgroundImage">backgroundImage</string>
+
+
 
     <string-array name="products">
         <item>apple</item>

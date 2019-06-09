@@ -36,6 +36,9 @@
         <activity
             android:name=".View.ShoppingCartActivity"
             android:label="ShoppingCartActivity" />
+        <activity
+            android:name=".View.ProductinfoActivity"
+            android:label="ProductInfoActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
