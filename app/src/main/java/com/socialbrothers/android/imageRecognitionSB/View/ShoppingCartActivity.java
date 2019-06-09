@@ -45,7 +45,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
-	private Product testProduct;
+	private Product scannedProduct;
 	private GestureDetector gDetector;
 	
 	public static final String VIEW = "View";
@@ -62,9 +62,9 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		mAlert = new AlertDialog.Builder(this);
 		mProducts = new ArrayList<>();
 		
-		testProduct = (Product) getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
-		if (testProduct == null) {
-			Log.e("ShoppingCart: ", "Product is null");
+		scannedProduct = (Product) getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
+		if (scannedProduct == null) {
+			Log.d("ShoppingCart: ", "Product is null");
 		}
 	}
 	
@@ -132,15 +132,15 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 	}
 	
 	private void addProduct(List<ProductList> products) {
+		if (scannedProduct == null) return;
 		for (ProductList p : products) {
-			if (testProduct.getName().trim().compareToIgnoreCase(p.getName().trim()) == 0) {
+			if (scannedProduct.getName().trim().compareToIgnoreCase(p.getName().trim()) == 0) {
 				p.setProductCount(p.getProductCount() + 1);
 				mMainViewModel.update(p);
 				return;
 			}
 		}
-		
-		final ProductList productList = new ProductList(testProduct.getName(), testProduct.getCurrentPrice(), testProduct.getResourceId(), 1, testProduct.getDescription());
+		final ProductList productList = new ProductList(scannedProduct.getName(), scannedProduct.getCurrentPrice(), scannedProduct.getResourceId(), 1, scannedProduct.getDescription());
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}
