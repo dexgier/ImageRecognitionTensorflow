@@ -42,6 +42,7 @@ import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditio
 import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
 import org.tensorflow.lite.Interpreter;
@@ -147,6 +148,7 @@ public class ImageClassifier {
      * Initializes an {@code ImageClassifier}.
      */
     ImageClassifier(Activity activity, Context context, View v) throws IOException {
+        ProductManager.Initialize(context.getResources());
         tflite = new Interpreter(loadModelFile(activity));
         this.context = context;
         this.v = v;

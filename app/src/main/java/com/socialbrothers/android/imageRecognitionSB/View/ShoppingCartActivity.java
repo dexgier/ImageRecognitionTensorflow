@@ -148,7 +148,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		}
 	}
 
-		final ProductList productList = new ProductList(product.getName(), 1.3, testProduct.getResourceId(), 1);
+		final ProductList productList = new ProductList(product.getName(), 1.3, testProduct.getResourceId(), 1, testProduct.getDescription());
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}
@@ -204,15 +204,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 	public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
 	return false;
 	}
-
 	@Override
 	public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-
 	}
-
 	@Override
 	public void onRequestDisallowInterceptTouchEvent(boolean b) {
-
 	}
 }
 

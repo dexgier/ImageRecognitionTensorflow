@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.text.DecimalFormat;
@@ -23,13 +24,15 @@ public class ProductinfoActivity extends AppCompatActivity {
     private ImageView backgroundImage, sideImage;
     private Product chosenProduct;
 
+    private TextView productDescription;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_productinfo);
         chosenProduct = (Product) getIntent().getSerializableExtra(ProductAdapter.KEY_PRODUCT);
+        Log.d("", chosenProduct.getName()+ " + " + chosenProduct.getDescription());
         initViews();
-
     }
 
     private void initViews() {
@@ -38,9 +41,11 @@ public class ProductinfoActivity extends AppCompatActivity {
         buttonBack = findViewById(R.id.returnButton);
         backgroundImage = findViewById(R.id.backdropImage);
         sideImage = findViewById(R.id.productBackgroundImage);
-
+        productDescription = findViewById(R.id.productDesc);
         productName.setText(chosenProduct.getName());
         DecimalFormat df = new DecimalFormat("€0.00");
+        productDescription.setText(chosenProduct.getDescription());
+        Log.d("test: ",chosenProduct.getDescription() + "+" + chosenProduct.getName());
         productPrice.setText(df.format(chosenProduct.getCurrentPrice()));
         backgroundImage.setImageResource(chosenProduct.getResourceId());
         sideImage.setImageResource(chosenProduct.getResourceId());
