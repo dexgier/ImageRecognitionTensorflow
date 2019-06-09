@@ -22,7 +22,7 @@ public class Alternatives extends AppCompatActivity {
     private TextView mProduct;
     private Button toShoppingCart, scanAgain;
     public static String EDIT_PRODUCT  = "EDIT_PRODUCT";
-    private Product Appel, Ananas, Peer;
+    private Product Apple, Banana, Pear;
     private ImageView imgViewAlternative1, imgViewAlternative2, imgViewAlternative3;
     public static final String KEY_PRODUCT = "1234";
 
@@ -41,14 +41,14 @@ public class Alternatives extends AppCompatActivity {
         imgViewAlternative2 = findViewById(R.id.imgViewAlternative2);
         imgViewAlternative3 = findViewById(R.id.imgViewAlternative3);
 
-        Appel = ProductManager.getProduct("appel");
-        imgViewAlternative1.setImageResource(Appel.getResourceId());
+        Apple = ProductManager.getProduct("apple");
+        imgViewAlternative1.setImageResource(Apple.getResourceId());
 
-        Ananas = ProductManager.getProduct("ananas");
-        imgViewAlternative2.setImageResource(Ananas.getResourceId());
+        Banana = ProductManager.getProduct("banana");
+        imgViewAlternative2.setImageResource(Banana.getResourceId());
 
-        Peer = ProductManager.getProduct("peer");
-        imgViewAlternative3.setImageResource(Peer.getResourceId());
+        Pear = ProductManager.getProduct("pear");
+        imgViewAlternative3.setImageResource(Pear.getResourceId());
 
         mProduct = findViewById(R.id.productName);
         toShoppingCart = findViewById(R.id.toShoppingCart);
@@ -72,17 +72,17 @@ public class Alternatives extends AppCompatActivity {
 
         imgViewAlternative1.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
-            intent.putExtra(KEY_PRODUCT, Appel);
+            intent.putExtra(KEY_PRODUCT, Apple);
             this.startActivity(intent);
         });
         imgViewAlternative2.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
-            intent.putExtra(KEY_PRODUCT, Ananas);
+            intent.putExtra(KEY_PRODUCT, Banana);
             this.startActivity(intent);
         });
         imgViewAlternative3.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
-            intent.putExtra(KEY_PRODUCT, Peer);
+            intent.putExtra(KEY_PRODUCT, Pear);
             this.startActivity(intent);
         });
     }

@@ -29,12 +29,24 @@ public class Product extends Observable implements Serializable {
 	
 	@ColumnInfo(name = "resourceId")
 	private int resourceId;
+
+	@ColumnInfo(name="description")
+	private String description;
 	
 	@SuppressLint("RestrictedApi")
-	public Product(String name, double currentPrice, int resourceId) {
+	public Product(String name, double currentPrice, int resourceId, String description) {
 		this.name = name;
 		this.currentPrice = currentPrice;
 		this.resourceId = resourceId;
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Long getId() {
@@ -44,7 +56,7 @@ public class Product extends Observable implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

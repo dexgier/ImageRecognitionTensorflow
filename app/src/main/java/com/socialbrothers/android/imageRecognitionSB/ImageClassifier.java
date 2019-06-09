@@ -15,6 +15,9 @@ limitations under the License.
 
 package com.socialbrothers.android.imageRecognitionSB;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,11 +26,15 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +44,7 @@ import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditio
 import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
 import org.tensorflow.lite.Interpreter;
@@ -102,17 +110,15 @@ public class ImageClassifier {
     /**
      * An instance of the driver class to run model inference with Tensorflow Lite.
      */
-
-    //onze variabelen
     private Interpreter tflite;
     private Context context;
     private View v;
     private boolean isVisible;
+    private boolean canMove;
     private TextView productName, title;
-    private Button scanButton;
-    private boolean isButtonPressed;
-
-    //button beginscanne
+    private at.markushi.ui.CircleButton scanButton;
+    private ProgressBar scanningCirkle;
+    private ConstraintLayout constraintLayoutHeader, constraintLayoutFooter;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -146,6 +152,7 @@ public class ImageClassifier {
      * Initializes an {@code ImageClassifier}.
      */
     ImageClassifier(Activity activity, Context context, View v) throws IOException {
+        ProductManager.Initialize(context.getResources());
         tflite = new Interpreter(loadModelFile(activity));
         this.context = context;
         this.v = v;
@@ -153,7 +160,7 @@ public class ImageClassifier {
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
         title = v.findViewById(R.id.title);
-        //oproepen
+        scanningCirkle = v.findViewById(R.id.scanningCircle);
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
         imgData =
@@ -170,39 +177,97 @@ public class ImageClassifier {
      * Classifies a frame from the preview stream.
      */
 
+    @SuppressLint("ClickableViewAccessibility")
     String classifyFrame(Bitmap bitmap) {
         if (tflite == null) {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
-//        productName = v.findViewById(R.id.text);
+        productName = v.findViewById(R.id.text);
+        scanButton = v.findViewById(R.id.scanButton);
+        title = v.findViewById(R.id.title);
+        constraintLayoutHeader = v.findViewById(R.id.control2);
         String productText = printTopKLabels();
-        productName.setVisibility(View.INVISIBLE);
+        scanButton.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    ObjectAnimator scaleDownConstraintY = ObjectAnimator.ofFloat(constraintLayoutHeader,"scaleY",0f);
+                    ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(scanButton, "scaleX", 1.6f);
+                    ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(scanButton, "scaleY", 1.6f);
+                    RotateAnimation rotate = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate.setDuration(500);
+                    scanButton.startAnimation(rotate);
+                    scaleDownX.setDuration(500);
+                    scaleDownY.setDuration(500);
+                    scaleDownConstraintY.setDuration(100);
 
-        scanButton = v.findViewById(R.id.scan_button);
-        scanButton.setVisibility(View.INVISIBLE);
+                    AnimatorSet scaleDown = new AnimatorSet();
+                    scaleDown.play(scaleDownX).with(scaleDownY);
+
+                    scaleDown.start();
+
+                    AnimatorSet scaleDownConstraint = new AnimatorSet();
+                    scaleDownConstraint.play(scaleDownConstraintY);
 
 
-        // Hieronder in try komt alles !!
-        if (isVisible) {
+                    scaleDownConstraint.start();
 
-            try {
-                ButtonPress();
+                    title.setVisibility(View.INVISIBLE);
+                    scanningCirkle.setVisibility(View.VISIBLE);
+                    if (isVisible) {
+                        try {
+                            Intent intent = new Intent(context, Alternatives.class);
+                            intent.putExtra(EDIT_PRODUCT, productText);
+                            context.startActivity(intent);
+                        } catch (Exception e) {
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
 
+                    if (isVisible) {
+                        if(canMove) {
+                            try {
+                                Intent intent = new Intent(context, Alternatives.class);
+                                intent.putExtra(EDIT_PRODUCT, productText);
+                                context.startActivity(intent);
+                                canMove = false;
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    ObjectAnimator scaleUpConstraintY = ObjectAnimator.ofFloat(constraintLayoutHeader,"scaleY",1f);
+                    ObjectAnimator scaleDownX2 = ObjectAnimator.ofFloat(scanButton, "scaleX", 1f);
+                    ObjectAnimator scaleDownY2 = ObjectAnimator.ofFloat(scanButton, "scaleY", 1f);
+                    RotateAnimation rotate2 = new RotateAnimation(360, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    rotate2.setDuration(500);
+                    scanButton.startAnimation(rotate2);
+                    scaleDownX2.setDuration(1000);
+                    scaleDownY2.setDuration(1000);
+                    scaleUpConstraintY.setDuration(100);
 
-                //als button is ingedrukt
-                if (isButtonPressed) {
-                    Intent intent = new Intent(context, Alternatives.class);
-                    intent.putExtra(EDIT_PRODUCT, productText);
-                    context.startActivity(intent);
-                }     //else button is niet ingedrukt
+                    AnimatorSet scaleDown2 = new AnimatorSet();
+                    scaleDown2.play(scaleDownX2).with(scaleDownY2);
 
+                    scaleDown2.start();
 
-            } catch (Exception e) {
+                    AnimatorSet scaleUpConstraint = new AnimatorSet();
+                    scaleUpConstraint.play(scaleUpConstraintY);
+
+                    scaleUpConstraint.start();
+
+                    canMove = true;
+                    title.setVisibility(View.VISIBLE);
+                    scanningCirkle.setVisibility(View.INVISIBLE);
+                    //scanButton.setEnabled(false);
+                    break;
+
             }
+            return true;
+        });
 
-
-        }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
@@ -323,35 +388,10 @@ public class ImageClassifier {
         if (label.getValue() > MINIMUM_RECOGNITION_TRESHHOLD) {
             if (label.getValue() > MINIMUM_PAYMENT_TRESHHOLD) {
                 isVisible = true;
-                scanButton.setVisibility(View.VISIBLE);
                 return textToShow;
             }
             return textToShow;
         } else if (label.getValue() <= MINIMUM_PAYMENT_TRESHHOLD) isVisible = false;
-        scanButton.setVisibility(View.INVISIBLE);
         return WARNING_MINIMUM_RECOGNITION_TRESHOLD;
-    }
-
-    public void ButtonPress() {
-
-        scanButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        isButtonPressed = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isButtonPressed = false;
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        isButtonPressed = false;
-                        break;
-
-                }
-                return isButtonPressed;
-            }
-        });
     }
 }

@@ -58,21 +58,21 @@
             android:id="@+id/imgViewAlternative1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/appel"
+            android:src="@drawable/apple"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageView
             android:id="@+id/imgViewAlternative2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ananas"
+            android:src="@drawable/banana"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageView
             android:id="@+id/imgViewAlternative3"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/peer"
+            android:src="@drawable/pear"
             tools:srcCompat="@tools:sample/avatars" />
     </TableRow>
 
