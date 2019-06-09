@@ -3,15 +3,20 @@ package com.socialbrothers.android.imageRecognitionSB.View;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,7 +29,6 @@ import com.socialbrothers.android.imageRecognitionSB.Controller.MainViewModel;
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
-import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.math.RoundingMode;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-public class ShoppingCartActivity extends AppCompatActivity {
+public class ShoppingCartActivity extends AppCompatActivity implements RecyclerView.OnItemTouchListener {
 	
 	private Spinner mSpinner;
 	private Button mButton;
@@ -46,6 +50,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
 	private Product testProduct;
+	private GestureDetector gDetector;
+
+	public static final String VIEW = "View";
+	public static final int VIEWCODE = 4321;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,7 +148,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 		}
 	}
 
-		final ProductList productList = new ProductList(product.getName(), 1.3, 1, 1);
+		final ProductList productList = new ProductList(product.getName(), 1.3, testProduct.getResourceId(), 1);
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}
@@ -161,13 +170,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
 	
 	private void updateUI() {
 		if (mProductAdapter == null) {
-			mProductAdapter = new ProductAdapter(mProducts);
+			mProductAdapter = new ProductAdapter(this, mProducts);
 			mRecyclerView.setAdapter(mProductAdapter);
 		} else {
 			mProductAdapter.swapList(mProducts);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -189,6 +198,21 @@ public class ShoppingCartActivity extends AppCompatActivity {
 				finish();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+	return false;
+	}
+
+	@Override
+	public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+
+	}
+
+	@Override
+	public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
 	}
 }
 
