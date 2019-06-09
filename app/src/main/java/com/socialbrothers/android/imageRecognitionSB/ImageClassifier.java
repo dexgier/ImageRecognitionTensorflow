@@ -257,7 +257,8 @@ public class ImageClassifier {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     try {
-                        Log.e("SHOPPINGLIST: ","The button works ! ");
+                        Intent intent = new Intent(context, ShoppingListActivity.class);
+                        context.startActivity(intent);
                     }catch (Exception e){}
                 }
                 return true;
