@@ -1,33 +1,20 @@
 package com.socialbrothers.android.imageRecognitionSB;
 
 import android.content.Intent;
-import android.os.Debug;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
-import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
-import java.io.Serializable;
-import java.util.Observable;
-
-/**
- * This class extracts the scanned product out the ImageClassifier class
- * Handles navigation to different screens when certain items are selected
- *
- */
-
 public class Alternatives extends AppCompatActivity {
 
+    //variables for alternative screen
     private TextView mProduct;
     private Button toShoppingCart, scanAgain;
     public static String EDIT_PRODUCT  = "EDIT_PRODUCT";
@@ -39,16 +26,18 @@ public class Alternatives extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_alternatives);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width*.9),(int)(height*.7));
 
-
+        /*
+        * Sets up the alternative screen views.
+        * Also gets the right product from ProductManager to display the right picture.
+        * */
         imgViewAlternative1 = findViewById(R.id.imgViewAlternative1);
         imgViewAlternative2 = findViewById(R.id.imgViewAlternative2);
         imgViewAlternative3 = findViewById(R.id.imgViewAlternative3);
@@ -69,9 +58,12 @@ public class Alternatives extends AppCompatActivity {
         scannedProduct = intent.getStringExtra(EDIT_PRODUCT);
         mProduct.setText(scannedProduct);
         buttonActivity();
-
-
     }
+
+    /*
+    * ButtonActivity function handles all the button clicks done on the alternative screen.
+    * Sends the right intents through, and makes sure that the right activity is called.
+    * */
     private void buttonActivity(){
         toShoppingCart.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);

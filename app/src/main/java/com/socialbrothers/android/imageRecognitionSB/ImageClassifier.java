@@ -124,10 +124,11 @@ public class ImageClassifier {
     //Initalizes context and view so that elements from activities can be instantiated
     //Instantiate elements in activity and name them after their respective variable names
     ImageClassifier(Activity activity, Context context, View v) throws IOException {
-        ProductManager.Initialize(context.getResources());
         tflite = new Interpreter(loadModelFile(activity));
         this.context = context;
         this.v = v;
+        //initializes productmanager gets the resources for it
+        ProductManager.Initialize(context.getResources());
         labelList = loadLabelList(activity);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
 
