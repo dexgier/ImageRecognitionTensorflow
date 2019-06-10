@@ -11,7 +11,8 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.Observable;
 
-@Entity(tableName = "product")
+
+@Entity(tableName = "product") //Product information
 public class Product extends Observable implements Serializable {
 	
 	@PrimaryKey(autoGenerate = true)

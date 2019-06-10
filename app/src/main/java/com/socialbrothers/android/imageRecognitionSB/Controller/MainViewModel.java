@@ -11,6 +11,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
+//ViewModel to access the local database
 public class MainViewModel extends AndroidViewModel {
 	
 	private ProductRepository mRepository;

@@ -3,7 +3,7 @@ package com.socialbrothers.android.imageRecognitionSB.Otherthings;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 
-@Entity
+@Entity //ProductList contains the product information and adds the computation for total price with the amount of products
 public class ProductList extends Product {
 	
 	@ColumnInfo(name = "totalPrice")
@@ -36,6 +36,7 @@ public class ProductList extends Product {
 		pricesChanged();
 	}
 	
+	//If the prices get changed the IU will get updated
 	@Override
 	public void pricesChanged() {
 		synchronized (this) {

@@ -9,6 +9,7 @@ import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductDao;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 
+//The actual database that stores the products, this is a singleton, so that no more than one database can exist at a time
 @Database(entities = {Product.class, ProductList.class}, version = 1, exportSchema = false)
 public abstract class ProductRoomDatabase extends RoomDatabase {
 	
@@ -20,7 +21,7 @@ public abstract class ProductRoomDatabase extends RoomDatabase {
 	
 	public static ProductRoomDatabase getDatabase(final Context context) {
 		if (INSTANCE == null) {
-			synchronized (ProductRoomDatabase.class) {
+			synchronized (ProductRoomDatabase.class) {  //Synchronized so it can only be run by one thread
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
 							ProductRoomDatabase.class, NAME_DATABASE).build();

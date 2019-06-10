@@ -9,7 +9,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-@Dao
+@Dao //Dao can change make changes to the database
 public interface ProductDao {
 	
 	@Query("SELECT * FROM productlist")

@@ -11,13 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Alternatives;
@@ -33,10 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+//This class keeps track of all the products that the user has scanned
 public class ShoppingCartActivity extends AppCompatActivity implements RecyclerView.OnItemTouchListener {
 	
-	private Spinner mSpinner;
-	private Button mButton;
 	private TextView mTotalPriceView;
 	private RecyclerView mRecyclerView;
 	private ProductAdapter mProductAdapter;
@@ -45,8 +41,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
-	private Product scannedProduct;
-	private GestureDetector gDetector;
+	private Product mScannedProduct;
 	
 	public static final String VIEW = "View";
 	public static final int VIEWCODE = 4321;
@@ -62,8 +57,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		mAlert = new AlertDialog.Builder(this);
 		mProducts = new ArrayList<>();
 		
-		scannedProduct = (Product) getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
-		if (scannedProduct == null) {
+		mScannedProduct = (Product) getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
+		if (mScannedProduct == null) {
 			Log.d("ShoppingCart: ", "Product is null");
 		}
 	}
@@ -80,6 +75,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 							.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
+									//If the user presses yes item gets deleted from database
 									mMainViewModel.delete(p);
 									alerted = false;
 								}
@@ -87,6 +83,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 							.setNegativeButton("No", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
+									//If the user presses no productcount gets reset to the minimal of one
 									p.setProductCount(1);
 									mMainViewModel.update(p);
 									dialog.cancel();
@@ -101,6 +98,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 						alert.show();
 					}
 				} else {
+					//Update the recycler view after item gets deleted
 					mMainViewModel.update(p);
 				}
 				setTotalPrice();
@@ -123,6 +121,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 					p.deleteObservers();
 					p.addObserver(mObserver);
 				}
+				//We wait for the items to get retrieved form the database before we add the product
 				if (!started) {
 					addProduct(products);
 					started = true;
@@ -131,21 +130,22 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		});
 	}
 	
+	//This method will check if the added product already exists, if it does the productcount of a ProductList gets increased by one
 	private void addProduct(List<ProductList> products) {
-		if (scannedProduct == null) return;
+		if (mScannedProduct == null) return;
 		for (ProductList p : products) {
-			if (scannedProduct.getName().trim().compareToIgnoreCase(p.getName().trim()) == 0) {
+			if (mScannedProduct.getName().trim().compareToIgnoreCase(p.getName().trim()) == 0) {
 				p.setProductCount(p.getProductCount() + 1);
 				mMainViewModel.update(p);
 				return;
 			}
 		}
-		final ProductList productList = new ProductList(scannedProduct.getName(), scannedProduct.getCurrentPrice(), scannedProduct.getResourceId(), 1, scannedProduct.getDescription());
+		final ProductList productList = new ProductList(mScannedProduct.getName(), mScannedProduct.getCurrentPrice(), mScannedProduct.getResourceId(), 1, mScannedProduct.getDescription());
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}
 	
-	
+	//Compute the total price everytime a product gets added or removed
 	private void setTotalPrice() {
 		double totalPrice = 0;
 		DecimalFormat df = new DecimalFormat("€0.00");
@@ -160,6 +160,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		}
 	}
 	
+	//Update the recyclerview
 	private void updateUI() {
 		if (mProductAdapter == null) {
 			mProductAdapter = new ProductAdapter(this, mProducts);

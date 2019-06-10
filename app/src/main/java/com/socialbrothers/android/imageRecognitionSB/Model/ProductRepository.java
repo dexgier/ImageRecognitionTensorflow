@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+//Access to the productdao, productdao can change de local database
 public class ProductRepository {
 	private ProductRoomDatabase mAppDataBase;
 	private ProductDao mProductDao;

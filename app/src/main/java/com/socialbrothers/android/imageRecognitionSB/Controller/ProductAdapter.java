@@ -54,12 +54,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		final ProductList product = productList.get(i);
 		DecimalFormat df = new DecimalFormat("€0.00");
 		
+		//All items get the text and image corresponding to the product
 		viewHolder.productImage.setImageDrawable(context.getResources().getDrawable(product.getResourceId(), null));
 		viewHolder.productName.setText(product.getName());
 		viewHolder.currentPrice.setText(df.format(product.getCurrentPrice()));
 		viewHolder.amountOfProducts.setText(String.valueOf(product.getProductCount()));
 		viewHolder.totalPrice.setText(df.format(product.getTotalPrice()));
 		
+		//Add and remove buttons to increase or decrease the amount of products
 		viewHolder.add.setImageResource(R.drawable.baseline_add_circle_black_24dp);
 		viewHolder.add.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -108,7 +110,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		private ImageButton add;
 		private ImageButton remove;
 		
-		//maybe something for discounts
+		//(optional) something for discounts
 		
 		public ViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -116,7 +118,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 			infoButton = itemView.findViewById(R.id.informationButton);
 			productName = itemView.findViewById(R.id.productName);
 			currentPrice = itemView.findViewById(R.id.individualPriceProduct);
-			//regularprice
 			amountOfProducts = itemView.findViewById(R.id.productCount);
 			totalPrice = itemView.findViewById(R.id.totalPriceProduct);
 			add = itemView.findViewById(R.id.imageButtonAdd);
