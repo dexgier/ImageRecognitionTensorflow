@@ -40,6 +40,11 @@
             android:name=".View.ProductinfoActivity"
             android:label="ProductInfoActivity" />
 
+        <activity android:name=".View.ShoppingListActivity"
+            android:label="ShoppingListActivity"/>
+        <activity android:name=".View.AddShoppingListActivity"
+            android:label="AddShoppingListActivity"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

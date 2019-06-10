@@ -22,7 +22,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.SystemClock;
@@ -36,13 +35,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
-import com.google.firebase.ml.custom.FirebaseModelDataType;
-import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
-import com.google.firebase.ml.custom.FirebaseModelInterpreter;
-import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingListActivity;
 
 import org.tensorflow.lite.Interpreter;
@@ -57,7 +49,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -177,6 +168,20 @@ public class ImageClassifier {
             Log.e(TAG, "Image classifier has not been initialized; Skipped.");
             return "Uninitialized Classifier.";
         }
+
+        shoppinglistButton = (Button) v.findViewById(R.id.shoppinglistButton);
+        shoppinglistButton.setOnTouchListener((v, event) -> {
+            Intent intent = new Intent(context, ShoppingListActivity.class);
+            if (event.getAction() == MotionEvent.ACTION_DOWN){
+                try {
+                    Log.e("TAG", "CLICK WORKS ");
+                    Toast.makeText(context, "BUTTON CLICK", Toast.LENGTH_LONG).show();
+                        context.startActivity(intent);
+                }catch (Exception e){}
+            }
+            return true;
+        });
+
         productName = v.findViewById(R.id.text);
         scanButton = v.findViewById(R.id.scanButton);
 
@@ -251,19 +256,6 @@ public class ImageClassifier {
             }
             return true;
         });
-
-        shoppinglistButton = (Button) v.findViewById(R.id.shoppinglistButton);
-        shoppinglistButton.setOnTouchListener((v, event) -> {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
-                    try {
-                        Intent intent = new Intent(context, ShoppingListActivity.class);
-                        context.startActivity(intent);
-                    }catch (Exception e){}
-                }
-                return true;
-        });
-
 
 
 
