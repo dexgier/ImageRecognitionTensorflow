@@ -26,6 +26,7 @@ public class Alternatives extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_alternatives);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -57,8 +58,6 @@ public class Alternatives extends AppCompatActivity {
         scannedProduct = intent.getStringExtra(EDIT_PRODUCT);
         mProduct.setText(scannedProduct);
         buttonActivity();
-
-
     }
 
     /*

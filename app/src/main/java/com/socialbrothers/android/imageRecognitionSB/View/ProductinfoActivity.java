@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Controller.ProductAdapter;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
-import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.R;
 
 import java.text.DecimalFormat;
