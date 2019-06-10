@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 import com.socialbrothers.android.imageRecognitionSB.R;
 import com.socialbrothers.android.imageRecognitionSB.View.ProductinfoActivity;
-import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -26,8 +24,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	private List<ProductList> productList;
 	private Context context;
 	public static final String KEY_PRODUCT = "1234";
-
-
+	
+	
 	public ProductAdapter(Context context, List<ProductList> productList) {
 		this.productList = productList;
 		this.context = context;
@@ -55,7 +53,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		final ProductList product = productList.get(i);
 		DecimalFormat df = new DecimalFormat("€0.00");
 		
-	//	viewHolder.productImage.setImageResource(product.getResourceId());
+		viewHolder.productImage.setImageDrawable(context.getResources().getDrawable(product.getResourceId(), null));
 		viewHolder.productName.setText(product.getName());
 		viewHolder.currentPrice.setText(df.format(product.getCurrentPrice()));
 		viewHolder.amountOfProducts.setText(String.valueOf(product.getProductCount()));
@@ -71,12 +69,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 				viewHolder.totalPrice.setText(df.format(product.getTotalPrice()));
 			}
 		});
-		viewHolder.productImage.setImageResource(R.drawable.ic_action_info);
-		viewHolder.productImage.setOnClickListener(new View.OnClickListener() {
+		viewHolder.infoButton.setImageResource(R.drawable.ic_action_info);
+		viewHolder.infoButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, ProductinfoActivity.class);
-				intent.putExtra(KEY_PRODUCT,product);
+				intent.putExtra(KEY_PRODUCT, product);
 				context.startActivity(intent);
 			}
 		});
@@ -99,6 +97,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 	}
 	
 	public class ViewHolder extends RecyclerView.ViewHolder {
+		private ImageView infoButton;
 		private ImageView productImage;
 		private TextView productName;
 		private TextView currentPrice;
@@ -113,6 +112,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 		public ViewHolder(@NonNull View itemView) {
 			super(itemView);
 			productImage = itemView.findViewById(R.id.productImage);
+			infoButton = itemView.findViewById(R.id.informationButton);
 			productName = itemView.findViewById(R.id.productName);
 			currentPrice = itemView.findViewById(R.id.individualPriceProduct);
 			//regularprice
@@ -122,5 +122,5 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 			remove = itemView.findViewById(R.id.imageButtonRemove);
 		}
 	}
-
+	
 }

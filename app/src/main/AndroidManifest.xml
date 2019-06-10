@@ -26,7 +26,8 @@
         <activity
             android:name=".CameraActivity"
             android:theme="@style/AppTheme"
-            android:label="imageRecognitionSB">
+            android:label="imageRecognitionSB"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,10 +36,12 @@
         </activity>
         <activity
             android:name=".View.ShoppingCartActivity"
-            android:label="ShoppingCartActivity" />
+            android:label="ShoppingCartActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".View.ProductinfoActivity"
-            android:label="ProductInfoActivity" />
+            android:label="ProductInfoActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".View.ShoppingListActivity"
             android:label="ShoppingListActivity"/>
