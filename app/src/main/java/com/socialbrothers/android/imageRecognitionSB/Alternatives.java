@@ -20,6 +20,12 @@ import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 import java.io.Serializable;
 import java.util.Observable;
 
+/**
+ * This class extracts the scanned product out the ImageClassifier class
+ * Handles navigation to different screens when certain items are selected
+ *
+ */
+
 public class Alternatives extends AppCompatActivity {
 
     private TextView mProduct;
@@ -41,6 +47,8 @@ public class Alternatives extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width*.9),(int)(height*.7));
+
+
         imgViewAlternative1 = findViewById(R.id.imgViewAlternative1);
         imgViewAlternative2 = findViewById(R.id.imgViewAlternative2);
         imgViewAlternative3 = findViewById(R.id.imgViewAlternative3);
