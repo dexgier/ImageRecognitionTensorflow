@@ -14,10 +14,17 @@
  limitations under the License.
 -->
 <resources>
+    //product descriptions
     <string name="picture">Picture</string>
-    <string name="appleDesc">Prachtige Appels</string>
-    <string name="bananaDesc">Ziek leipe maar kromme bananen</string>
-    <string name="pearDesc">Peren zijn groen en teringlekker</string>
+    <string name="appelDesc">De appel is de vrucht van de plant Malus domestica uit de rozenfamilie (Rosaceae). De vlezige vrucht bestaat uit drie lagen, maar soms vormen twee of drie lagen één geheel en zijn ze afzonderlijk niet meer te herkennen. Zo zijn bij de appel het exocarp en mesocarp niet meer van elkaar te onderscheiden en vormen gezamenlijk met de opgezwollen bloembodem het vruchtvlees.</string>
+    <string name="banaanDesc">Bananen groeien aan een plant met grote bladeren. Ze houden van een warme omgeving. De meeste bananen komen dan ook uit verre landen als Colombia, Costa Rica en Honduras. </string>
+    <string name="peerDesc">Peer, Pyrus, is een plantengeslacht uit de rozenfamilie (Rosaceae) dat de algemeen bekende vruchten produceert. Het geslacht komt voor in veel landen, vooral op het noordelijk halfrond.</string>
+    <string name="croissantDesc"></string>
+    <string name="courgetteDesc"></string>
+    <string name="citroenDesc"></string>
+    <string name="tomaatDesc"></string>
+    <string name="sinaasappelDesc"></string>
+    <string name="komkommerDesc"></string>
 
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
@@ -26,6 +33,7 @@
     <string name="toggle_turn_off">NN:Off</string>
     <string name="toggle">Use NNAPI</string>
     <string name="title_activity_test">TestActivity</string>
+
     //product info
     <string name="product_Title_Placeholder">Product Title</string>
     <string name="product_Price_Placeholder">5,00</string>

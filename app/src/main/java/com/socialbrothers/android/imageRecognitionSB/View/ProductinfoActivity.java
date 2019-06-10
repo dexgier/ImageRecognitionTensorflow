@@ -20,10 +20,8 @@ import java.text.DecimalFormat;
 public class ProductinfoActivity extends AppCompatActivity {
     private TextView productName;
     private TextView productPrice;
-    private Button buttonBack;
-    private ImageView backgroundImage, sideImage;
+    private ImageView backgroundImage;
     private Product chosenProduct;
-
     private TextView productDescription;
 
     @Override
@@ -38,7 +36,7 @@ public class ProductinfoActivity extends AppCompatActivity {
     private void initViews() {
         productName = findViewById(R.id.productNameText);
         productPrice = findViewById(R.id.productPriceText);
-        buttonBack = findViewById(R.id.returnButton);
+        Button buttonBack = findViewById(R.id.returnButton);
         backgroundImage = findViewById(R.id.backdropImage);
         productDescription = findViewById(R.id.productDesc);
         productName.setText(chosenProduct.getName());
@@ -47,7 +45,7 @@ public class ProductinfoActivity extends AppCompatActivity {
         Log.d("test: ",chosenProduct.getDescription() + "+" + chosenProduct.getName());
         productPrice.setText(df.format(chosenProduct.getCurrentPrice()));
         backgroundImage.setImageResource(chosenProduct.getResourceId());
-        sideImage.setImageResource(chosenProduct.getResourceId());
+
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

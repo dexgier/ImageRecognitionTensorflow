@@ -152,10 +152,10 @@ public class ImageClassifier {
      * Initializes an {@code ImageClassifier}.
      */
     ImageClassifier(Activity activity, Context context, View v) throws IOException {
-        ProductManager.Initialize(context.getResources());
         tflite = new Interpreter(loadModelFile(activity));
         this.context = context;
         this.v = v;
+        ProductManager.Initialize(context.getResources());
         labelList = loadLabelList(activity);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
