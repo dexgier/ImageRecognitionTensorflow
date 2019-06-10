@@ -155,6 +155,7 @@ public class ImageClassifier {
         tflite = new Interpreter(loadModelFile(activity));
         this.context = context;
         this.v = v;
+        //initializes productmanager gets the resources for it
         ProductManager.Initialize(context.getResources());
         labelList = loadLabelList(activity);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
