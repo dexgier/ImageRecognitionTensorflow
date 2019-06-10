@@ -14,9 +14,8 @@ public class ProductManager {
 
     public static Product getProduct(String name) {
         if (products.containsKey(name)) {
-            Log.d("Test", name);
             return products.get(name);
-        }else Log.d("Test", name + " failed!");
+        }else
         return null;
     }
 
@@ -38,28 +37,3 @@ public class ProductManager {
         addProducts();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

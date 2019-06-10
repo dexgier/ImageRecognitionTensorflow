@@ -40,7 +40,6 @@ public class ProductinfoActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.productPriceText);
         buttonBack = findViewById(R.id.returnButton);
         backgroundImage = findViewById(R.id.backdropImage);
-        sideImage = findViewById(R.id.productBackgroundImage);
         productDescription = findViewById(R.id.productDesc);
         productName.setText(chosenProduct.getName());
         DecimalFormat df = new DecimalFormat("€0.00");
