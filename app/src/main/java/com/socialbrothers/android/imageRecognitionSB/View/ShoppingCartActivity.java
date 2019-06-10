@@ -3,9 +3,7 @@ package com.socialbrothers.android.imageRecognitionSB.View;
 import android.app.AlertDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +15,6 @@ import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -49,31 +45,27 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 	private java.util.Observer mObserver;
 	private AlertDialog.Builder mAlert;
 	private boolean alerted = false;
-	private Product testProduct;
+	private Product scannedProduct;
 	private GestureDetector gDetector;
-
+	
 	public static final String VIEW = "View";
 	public static final int VIEWCODE = 4321;
-
+	private boolean started = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.content_shopping_cart);
-		
-		mRecyclerView = findViewById(R.id.recy);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
-		mRecyclerView.setAdapter(mProductAdapter);
-		mTotalPriceView = findViewById(R.id.totalPriceView);
-		mAlert = new AlertDialog.Builder(this);
 		initObserver();
 		initViewModel();
-		initSpinner();
+		mTotalPriceView = findViewById(R.id.totalPriceView);
+		mAlert = new AlertDialog.Builder(this);
 		mProducts = new ArrayList<>();
-		testProduct = (Product)getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
-		//Log.d("Product:", testProduct.getName());
-		//addProduct(testProduct);
-		addProduct(testProduct);
-
+		
+		scannedProduct = (Product) getIntent().getSerializableExtra(Alternatives.KEY_PRODUCT);
+		if (scannedProduct == null) {
+			Log.d("ShoppingCart: ", "Product is null");
+		}
 	}
 	
 	private void initObserver() {
@@ -116,15 +108,10 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		};
 	}
 	
-	private void initSpinner() {
-		mSpinner = findViewById(R.id.spinner);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-				R.array.products, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinner.setAdapter(adapter);
-	}
-	
 	private void initViewModel() {
+		mRecyclerView = findViewById(R.id.recyclerViewShoppingCart);
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.VERTICAL, false));
+		mRecyclerView.setAdapter(mProductAdapter);
 		mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 		mMainViewModel.getProducts().observe(this, new Observer<List<ProductList>>() {
 			@Override
@@ -136,23 +123,28 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 					p.deleteObservers();
 					p.addObserver(mObserver);
 				}
+				if (!started) {
+					addProduct(products);
+					started = true;
+				}
 			}
 		});
 	}
-	private void addProduct(Product product) {
-		for (ProductList p : mProducts) {
-			if (testProduct.getName() == p.getName()) {
-			p.setProductCount(p.getProductCount() + 1);
-			mMainViewModel.update(p);
-			return;
+	
+	private void addProduct(List<ProductList> products) {
+		if (scannedProduct == null) return;
+		for (ProductList p : products) {
+			if (scannedProduct.getName().trim().compareToIgnoreCase(p.getName().trim()) == 0) {
+				p.setProductCount(p.getProductCount() + 1);
+				mMainViewModel.update(p);
+				return;
+			}
 		}
-	}
-
-		final ProductList productList = new ProductList(product.getName(), 1.3, testProduct.getResourceId(), 1, testProduct.getDescription());
+		final ProductList productList = new ProductList(scannedProduct.getName(), scannedProduct.getCurrentPrice(), scannedProduct.getResourceId(), 1, scannedProduct.getDescription());
 		productList.addObserver(mObserver);
 		mMainViewModel.insert(productList);
 	}
-
+	
 	
 	private void setTotalPrice() {
 		double totalPrice = 0;
@@ -176,7 +168,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 			mProductAdapter.swapList(mProducts);
 		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -199,14 +191,16 @@ public class ShoppingCartActivity extends AppCompatActivity implements RecyclerV
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-	return false;
+		return false;
 	}
+	
 	@Override
 	public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
 	}
+	
 	@Override
 	public void onRequestDisallowInterceptTouchEvent(boolean b) {
 	}

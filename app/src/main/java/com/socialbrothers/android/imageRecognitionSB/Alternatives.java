@@ -1,16 +1,19 @@
 package com.socialbrothers.android.imageRecognitionSB;
 
 import android.content.Intent;
+import android.os.Debug;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.Product;
+import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductList;
 import com.socialbrothers.android.imageRecognitionSB.Otherthings.ProductManager;
 import com.socialbrothers.android.imageRecognitionSB.View.ShoppingCartActivity;
 
@@ -23,6 +26,7 @@ public class Alternatives extends AppCompatActivity {
     private Button toShoppingCart, scanAgain;
     public static String EDIT_PRODUCT  = "EDIT_PRODUCT";
     private Product Apple, Banana, Pear;
+    String scannedProduct;
     private ImageView imgViewAlternative1, imgViewAlternative2, imgViewAlternative3;
     public static final String KEY_PRODUCT = "1234";
 
@@ -54,8 +58,8 @@ public class Alternatives extends AppCompatActivity {
         toShoppingCart = findViewById(R.id.toShoppingCart);
         scanAgain = findViewById(R.id.scanAgain);
         Intent intent = getIntent();
-        String product = intent.getStringExtra(EDIT_PRODUCT);
-        mProduct.setText(product);
+        scannedProduct = intent.getStringExtra(EDIT_PRODUCT);
+        mProduct.setText(scannedProduct);
         buttonActivity();
 
 
@@ -63,6 +67,8 @@ public class Alternatives extends AppCompatActivity {
     private void buttonActivity(){
         toShoppingCart.setOnClickListener(v -> {
             Intent intent = new Intent(this, ShoppingCartActivity.class);
+            Product product = ProductManager.getProduct(scannedProduct);
+            intent.putExtra(KEY_PRODUCT, product);
             this.startActivity(intent);
         });
         scanAgain.setOnClickListener(v -> {

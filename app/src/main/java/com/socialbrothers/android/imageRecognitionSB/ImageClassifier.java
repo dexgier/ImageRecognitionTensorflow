@@ -26,6 +26,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +117,8 @@ public class ImageClassifier {
     private boolean canMove;
     private TextView productName, title;
     private at.markushi.ui.CircleButton scanButton;
+    private ProgressBar scanningCirkle;
+    private ConstraintLayout constraintLayoutHeader, constraintLayoutFooter;
 
     /**
      * Labels corresponding to the output of the vision model.
@@ -156,6 +160,7 @@ public class ImageClassifier {
         Typeface typeface = ResourcesCompat.getFont(context, R.font.averia_sans_libre_light);
         productName = v.findViewById(R.id.text);
         title = v.findViewById(R.id.title);
+        scanningCirkle = v.findViewById(R.id.scanningCircle);
         productName.setTypeface(typeface);
         title.setTypeface(typeface);
         imgData =
@@ -180,34 +185,35 @@ public class ImageClassifier {
         }
         productName = v.findViewById(R.id.text);
         scanButton = v.findViewById(R.id.scanButton);
+        title = v.findViewById(R.id.title);
+        constraintLayoutHeader = v.findViewById(R.id.control2);
         String productText = printTopKLabels();
         scanButton.setOnTouchListener((v, event) -> {
-//            if(event.getAction()==MotionEvent.ACTION_DOWN){
-//                if(isVisible){
-//                    try{
-//                        productName.setVisibility(View.INVISIBLE);
-//                        Intent intent = new Intent(context, Alternatives.class);
-//                        intent.putExtra(EDIT_PRODUCT, productText);
-//                        context.startActivity(intent);
-//                    }catch(Exception e){
-//                    }
-//                }
-//            }else{
-//            }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(scanButton, "scaleX", 2f);
-                    ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(scanButton, "scaleY", 2f);
+                    ObjectAnimator scaleDownConstraintY = ObjectAnimator.ofFloat(constraintLayoutHeader,"scaleY",0f);
+                    ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(scanButton, "scaleX", 1.6f);
+                    ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(scanButton, "scaleY", 1.6f);
                     RotateAnimation rotate = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                     rotate.setDuration(500);
                     scanButton.startAnimation(rotate);
                     scaleDownX.setDuration(500);
                     scaleDownY.setDuration(500);
+                    scaleDownConstraintY.setDuration(100);
 
                     AnimatorSet scaleDown = new AnimatorSet();
                     scaleDown.play(scaleDownX).with(scaleDownY);
 
                     scaleDown.start();
+
+                    AnimatorSet scaleDownConstraint = new AnimatorSet();
+                    scaleDownConstraint.play(scaleDownConstraintY);
+
+
+                    scaleDownConstraint.start();
+
+                    title.setVisibility(View.INVISIBLE);
+                    scanningCirkle.setVisibility(View.VISIBLE);
                     if (isVisible) {
                         try {
                             Intent intent = new Intent(context, Alternatives.class);
@@ -232,6 +238,7 @@ public class ImageClassifier {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    ObjectAnimator scaleUpConstraintY = ObjectAnimator.ofFloat(constraintLayoutHeader,"scaleY",1f);
                     ObjectAnimator scaleDownX2 = ObjectAnimator.ofFloat(scanButton, "scaleX", 1f);
                     ObjectAnimator scaleDownY2 = ObjectAnimator.ofFloat(scanButton, "scaleY", 1f);
                     RotateAnimation rotate2 = new RotateAnimation(360, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -239,29 +246,28 @@ public class ImageClassifier {
                     scanButton.startAnimation(rotate2);
                     scaleDownX2.setDuration(1000);
                     scaleDownY2.setDuration(1000);
+                    scaleUpConstraintY.setDuration(100);
 
                     AnimatorSet scaleDown2 = new AnimatorSet();
                     scaleDown2.play(scaleDownX2).with(scaleDownY2);
 
                     scaleDown2.start();
+
+                    AnimatorSet scaleUpConstraint = new AnimatorSet();
+                    scaleUpConstraint.play(scaleUpConstraintY);
+
+                    scaleUpConstraint.start();
+
                     canMove = true;
+                    title.setVisibility(View.VISIBLE);
+                    scanningCirkle.setVisibility(View.INVISIBLE);
                     //scanButton.setEnabled(false);
                     break;
 
             }
             return true;
         });
-//        if(isVisible){
-//
-//            try{
-//                productName.setVisibility(View.INVISIBLE);
-//                Intent intent = new Intent(context, Alternatives.class);
-//                intent.putExtra(EDIT_PRODUCT, productText);
-//                context.startActivity(intent);
-//            }catch(Exception e){
-//
-//            }
-//        }
+
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
         long startTime = SystemClock.uptimeMillis();
