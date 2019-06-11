@@ -213,6 +213,7 @@ public class ImageClassifier {
                     scanBar.startAnimation(animation);
                     scanBar.setVisibility(View.VISIBLE);
 
+                    canMove = true;
 
                     if (isScanned) {
                         try {
