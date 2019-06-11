@@ -263,11 +263,6 @@ public class ImageClassifier {
                     canMove = true;
                     title.setVisibility(View.VISIBLE);
                     scanningCirkle.setVisibility(View.INVISIBLE);
-
-                    animation.cancel();
-                    scanButton.clearAnimation();
-                    animation.setAnimationListener(null);
-                    //scanButton.setEnabled(false);
                     break;
 
             }
