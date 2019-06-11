@@ -18,6 +18,7 @@ public class ProductManager {
 	private static Resources resources;
 	
 	public static Product getProduct(String name) {
+		Log.d("Name", name);
 		if (products.containsKey(name.trim().toLowerCase())) {
 			return products.get(name.trim().toLowerCase());
 		} else
@@ -29,15 +30,15 @@ public class ProductManager {
 	 * Also sets the right image, sets the right description string and the price so they are
 	 * */
 	private static void addProducts() {
-		products.put("apple", new Product("Appel", 0.6, R.drawable.apple, resources.getString(R.string.appelDesc)));
-		products.put("banana", new Product("Banaan", 0.4, R.drawable.banana, resources.getString(R.string.banaanDesc)));
+		products.put("appel", new Product("Appel", 0.6, R.drawable.apple, resources.getString(R.string.appelDesc)));
+		products.put("banaan", new Product("Banaan", 0.4, R.drawable.banana, resources.getString(R.string.banaanDesc)));
 		products.put("croissant", new Product("Croissant", 5.6, R.drawable.croissant, resources.getString(R.string.croissantDesc)));
-		products.put("cucumber", new Product("Komkommer", 5.6, R.drawable.cucumber, resources.getString(R.string.komkommerDesc)));
-		products.put("lemon", new Product("Citroen", 5.6, R.drawable.lemon, resources.getString(R.string.citroenDesc)));
-		products.put("orange", new Product("Sinaasappel", 5.6, R.drawable.orange, resources.getString(R.string.sinaasappelDesc)));
-		products.put("pear", new Product("Peer", 0.5, R.drawable.pear, resources.getString(R.string.peerDesc)));
-		products.put("tomato", new Product("Tomaat", 5.6, R.drawable.tomato, resources.getString(R.string.tomaatDesc)));
-		products.put("zucchini", new Product("Courgette", 5.6, R.drawable.zucchini, resources.getString(R.string.courgetteDesc)));
+		products.put("komkommer", new Product("Komkommer", 5.6, R.drawable.cucumber, resources.getString(R.string.komkommerDesc)));
+		products.put("citroen", new Product("Citroen", 5.6, R.drawable.lemon, resources.getString(R.string.citroenDesc)));
+		products.put("sinaasappel", new Product("Sinaasappel", 5.6, R.drawable.orange, resources.getString(R.string.sinaasappelDesc)));
+		products.put("peer", new Product("Peer", 0.5, R.drawable.pear, resources.getString(R.string.peerDesc)));
+		products.put("tomaat", new Product("Tomaat", 5.6, R.drawable.tomato, resources.getString(R.string.tomaatDesc)));
+		products.put("courgette", new Product("Courgette", 5.6, R.drawable.zucchini, resources.getString(R.string.courgetteDesc)));
 	}
 	
 	/*

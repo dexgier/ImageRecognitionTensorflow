@@ -19,12 +19,12 @@
     <string name="appelDesc">De appel is de vrucht van de plant Malus domestica uit de rozenfamilie (Rosaceae). De vlezige vrucht bestaat uit drie lagen, maar soms vormen twee of drie lagen één geheel en zijn ze afzonderlijk niet meer te herkennen. Zo zijn bij de appel het exocarp en mesocarp niet meer van elkaar te onderscheiden en vormen gezamenlijk met de opgezwollen bloembodem het vruchtvlees.</string>
     <string name="banaanDesc">Bananen groeien aan een plant met grote bladeren. Ze houden van een warme omgeving. De meeste bananen komen dan ook uit verre landen als Colombia, Costa Rica en Honduras. </string>
     <string name="peerDesc">Peer, Pyrus, is een plantengeslacht uit de rozenfamilie (Rosaceae) dat de algemeen bekende vruchten produceert. Het geslacht komt voor in veel landen, vooral op het noordelijk halfrond.</string>
-    <string name="croissantDesc"></string>
-    <string name="courgetteDesc"></string>
-    <string name="citroenDesc"></string>
-    <string name="tomaatDesc"></string>
-    <string name="sinaasappelDesc"></string>
-    <string name="komkommerDesc"></string>
+    <string name="croissantDesc">Brood in de vorm van een wassende maan kende men al in de klassieke oudheid. Een op de croissant gelijkend baksel wordt van oudsher Kipferl genoemd en is ontstaan in Oostenrijk, het wordt al vermeld in de 13e eeuw.</string>
+    <string name="courgetteDesc">Een courgette (ook wel: mergpompoen) is de ongerijpte vrucht van de soort Cucurbita pepo uit de komkommerfamilie (Cucurbitaceae), die als groente wordt gegeten.</string>
+    <string name="citroenDesc">De citroen (Citrus limon) is een gele citrusvrucht met een zure smaak die veroorzaakt wordt door het aanwezige citroenzuur dat ook in veel andere citrusvruchten voorkomt.</string>
+    <string name="tomaatDesc">De tomaat is een vrucht, afkomstig van de tomatenplant (Solanum lycopersicum, synoniem: Lycopersicon esculentum). De populaire vrucht is culinair gezien een groente.</string>
+    <string name="sinaasappelDesc">De sinaasappel (ook wel appelsien genoemd) is de vrucht van de sinaasappelboom (Citrus sinensis), die tot het geslacht Citrus behoort. </string>
+    <string name="komkommerDesc">De komkommer is een plant waarvan de gelijknamige vrucht in Nederland en België vooral rauw als salade wordt gegeten.</string>
 
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
